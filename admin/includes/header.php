@@ -42,11 +42,13 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     <ul>
         <?php $current_page = basename($_SERVER['PHP_SELF']); ?>
         <li><a href="index.php?page=dashboard" class="<?= $current_page === 'index.php' && ($_GET['page'] ?? '') !== 'settings' ? 'active' : '' ?>">Dashboard</a></li>
-        <li><a href="index.php?page=settings" class="<?= $current_page === 'index.php' && ($_GET['page'] ?? '') === 'settings' ? 'active' : '' ?>">Global Settings</a></li>
+        <li><a href="index.php?page=settings" class="<?= $current_page === 'index.php' && ($_GET['page'] ?? '') === 'settings' ? 'active' : '' ?>">Global Settings & Facts</a></li>
         <li><a href="organizations.php" class="<?= $current_page === 'organizations.php' ? 'active' : '' ?>">Organizations</a></li>
         <li><a href="experiences.php" class="<?= $current_page === 'experiences.php' ? 'active' : '' ?>">Experiences</a></li>
         <li><a href="skills.php" class="<?= $current_page === 'skills.php' ? 'active' : '' ?>">Skills</a></li>
         <li><a href="certifications.php" class="<?= $current_page === 'certifications.php' ? 'active' : '' ?>">Certifications</a></li>
+        <li><a href="activities.php" class="<?= $current_page === 'activities.php' ? 'active' : '' ?>">Sliders & Logos</a></li>
+        <li><a href="services.php" class="<?= $current_page === 'services.php' ? 'active' : '' ?>">Services & Rates</a></li>
         <li><a href="profile.php" class="<?= $current_page === 'profile.php' ? 'active' : '' ?>">Change Password</a></li>
         <li><a href="logout.php">Logout</a></li>
     </ul>
