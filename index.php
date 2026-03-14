@@ -52,7 +52,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Osman Nur Chaidir | Mentor Pengusaha Muda Berpengalaman 10 Tahun</title>
     <meta name="description" content="Berwirausaha sejak kelas 3 SMP, Osman Nur Chaidir kini telah membimbing lebih dari 150 pengusaha. Dapatkan insight bisnis berbasis pengalaman 10 tahun lebih.">
-    <meta name="google-site-verification" content="JfPZPG5GoGD6-XfpLUBSKFT0s26R00yFTtSaJm4aGoc" />
+    <meta name="google-site-verification" content="K8Fgg2T58pvdooBOsl7ipQp5LJW_hUcN8CA6T1J2C8s" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
