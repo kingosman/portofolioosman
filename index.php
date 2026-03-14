@@ -439,6 +439,28 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
     </div>
 </section>
 
+<!-- CERTIFICATIONS & ACHIEVEMENTS -->
+<section id="certifications">
+    <div class="container">
+        <div class="section-header fade-in-up">
+            <h2>Certifications & Achievements</h2>
+            <p class="text-muted">Academic credentials and professional recognitions.</p>
+        </div>
+        <div class="grid-3 fade-in-up">
+            <?php if ($certs->num_rows > 0): while($c = $certs->fetch_assoc()): ?>
+                <div class="clean-card">
+                    <span class="badge">Achievement</span>
+                    <h3><?= htmlspecialchars($c['title']) ?></h3>
+                    <p style="font-size: 0.95rem; margin-bottom: 20px;"><?= htmlspecialchars($c['description']) ?></p>
+                    <a href="<?= htmlspecialchars($c['image_path']) ?>" target="_blank" class="btn btn-outline" style="border-radius:12px; font-size: 0.85rem; padding: 10px 20px;">View Credential &rarr;</a>
+                </div>
+            <?php endwhile; else: ?>
+                <p style="color:var(--text-muted); width: 100%; text-align:center;">No certifications added yet.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>
+
 <!-- NEWS & VIDEOS -->
 <?php if($news_items->num_rows > 0): ?>
 <section id="news">
