@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-$host = 'localhost';
-$user = 'root';
-$pass = ''; // Adjust to your MySQL root password if not empty
-$db   = 'osman_portfolio';
+$host = 'sql213.infinityfree.com';
+$user = 'if0_41390389';
+$pass = 'osmannc07'; // Adjust to your MySQL root password if not empty
+$db   = 'if0_41390389_portofolio_osman';
 
 $conn = new mysqli($host, $user, $pass, $db);
 
