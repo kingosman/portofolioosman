@@ -48,6 +48,8 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
         <li><a href="skills.php" class="<?= $current_page === 'skills.php' ? 'active' : '' ?>">Skills</a></li>
         <li><a href="certifications.php" class="<?= $current_page === 'certifications.php' ? 'active' : '' ?>">Certifications</a></li>
         <li><a href="activities.php" class="<?= $current_page === 'activities.php' ? 'active' : '' ?>">Sliders & Logos</a></li>
+        <li><a href="news.php" class="<?= $current_page === 'news.php' ? 'active' : '' ?>">News & Videos</a></li>
+        <li><a href="testimonials.php" class="<?= $current_page === 'testimonials.php' ? 'active' : '' ?>">Testimonials</a></li>
         <li><a href="services.php" class="<?= $current_page === 'services.php' ? 'active' : '' ?>">Services & Rates</a></li>
         <li><a href="profile.php" class="<?= $current_page === 'profile.php' ? 'active' : '' ?>">Change Password</a></li>
         <li><a href="logout.php">Logout</a></li>

@@ -32,10 +32,15 @@ $services = $conn->query("SELECT * FROM services ORDER BY order_num ASC");
 $activities = $conn->query("SELECT * FROM activities ORDER BY order_num ASC");
 $photos = [];
 $logos = [];
+$photos = [];
+$logos = [];
 while($row = $activities->fetch_assoc()) {
     if ($row['type'] === 'photo') $photos[] = $row;
     else $logos[] = $row;
 }
+
+$news_items = $conn->query("SELECT * FROM news ORDER BY order_num ASC");
+$testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -169,6 +174,26 @@ while($row = $activities->fetch_assoc()) {
         .price-amount { font-size: 2.2rem; font-weight: 800; color: var(--primary); margin-bottom: 25px; letter-spacing: -1px; }
         .price-desc { font-size: 1rem; color: var(--text-body); margin-bottom: 25px; flex: 1; }
         .price-terms { font-size: 0.85rem; color: var(--text-muted); background: var(--bg); padding: 12px; border-radius: var(--radius-sm); margin-bottom: 25px; text-align: left;}
+
+        /* News & Testimonials */
+        .news-card { border-radius: var(--radius-md); overflow: hidden; background: var(--surface); border: 1px solid var(--border); transition: var(--transition); height: 100%; display: flex; flex-direction: column; text-decoration: none; color: inherit; }
+        .news-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .news-thumb { height: 180px; width: 100%; position: relative; overflow: hidden; }
+        .news-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .news-category { position: absolute; top: 12px; left: 12px; background: var(--primary); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .news-content { padding: 20px; }
+        .news-content h4 { font-size: 1.1rem; color: var(--text-main); font-weight: 700; line-height: 1.4; }
+
+        .testi-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 40px; position: relative; transition: var(--transition); }
+        .testi-card::before { content: '"'; position: absolute; top: 20px; right: 30px; font-size: 8rem; color: var(--primary-light); font-family: serif; line-height: 1; z-index: 0; }
+        .testi-content { position: relative; z-index: 1; font-size: 1.1rem; font-style: italic; margin-bottom: 30px; color: var(--text-body); }
+        .testi-user { display: flex; align-items: center; gap: 15px; position: relative; z-index: 1; }
+        .testi-user img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-light); }
+        .testi-user h5 { font-weight: 700; color: var(--text-main); }
+        .testi-user span { font-size: 0.85rem; color: var(--text-muted); }
+
+        .skill-thumb-box { width: 50px; height: 50px; background: var(--primary-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
+        .skill-thumb-box img { width: 30px; height: 30px; object-fit: contain; }
 
         /* CTA */
         .cta-section { background-color: var(--primary); border-radius: var(--radius-lg); padding: 80px 40px; text-align: center; margin: 0 24px 120px; color: #ffffff; position: relative; overflow: hidden; }
@@ -395,6 +420,11 @@ while($row = $activities->fetch_assoc()) {
                             <p style="color:var(--text-muted);">No entries available.</p>
                         <?php else: foreach($skillList[$cat] as $s): ?>
                             <div class="clean-card" style="padding: 24px;">
+                                <?php if(!empty($s['thumbnail'])): ?>
+                                    <div class="skill-thumb-box">
+                                        <img src="<?= htmlspecialchars($s['thumbnail']) ?>" alt="<?= htmlspecialchars($s['name']) ?>">
+                                    </div>
+                                <?php endif; ?>
                                 <h3 style="margin-bottom:0; font-size:1.15rem;"><?= htmlspecialchars($s['name']) ?></h3>
                                 <?php if(!empty($s['portfolio_link'])): ?>
                                     <a href="<?= htmlspecialchars($s['portfolio_link']) ?>" target="_blank" style="margin-top:10px;display:inline-block;color:var(--primary);font-size:0.9em;font-weight:600;text-decoration:none;">View Project &rarr;</a>
@@ -408,6 +438,58 @@ while($row = $activities->fetch_assoc()) {
         </div>
     </div>
 </section>
+
+<!-- NEWS & VIDEOS -->
+<?php if($news_items->num_rows > 0): ?>
+<section id="news">
+    <div class="container">
+        <div class="section-header fade-in-up">
+            <h2>News & Videos</h2>
+            <p class="text-muted">Featured press coverage and digital content.</p>
+        </div>
+        <div class="grid-3 fade-in-up">
+            <?php while($news = $news_items->fetch_assoc()): ?>
+            <a href="<?= htmlspecialchars($news['link']) ?>" target="_blank" class="news-card">
+                <div class="news-thumb">
+                    <span class="news-category"><?= $news['category'] ?></span>
+                    <img src="<?= htmlspecialchars($news['thumbnail']) ?>" alt="<?= htmlspecialchars($news['title']) ?>">
+                </div>
+                <div class="news-content">
+                    <h4><?= htmlspecialchars($news['title']) ?></h4>
+                    <div style="margin-top:15px; color:var(--primary); font-weight:700; font-size:0.9rem;">View Content &rarr;</div>
+                </div>
+            </a>
+            <?php endwhile; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
+<!-- TESTIMONIALS -->
+<?php if($testimonials->num_rows > 0): ?>
+<section id="testimonials" class="bg-white">
+    <div class="container">
+        <div class="section-header fade-in-up">
+            <h2>Kind Words</h2>
+            <p class="text-muted">What partners and clients say about our collaboration.</p>
+        </div>
+        <div class="grid-3 fade-in-up">
+            <?php while($testi = $testimonials->fetch_assoc()): ?>
+            <div class="testi-card">
+                <div class="testi-content">"<?= htmlspecialchars($testi['content']) ?>"</div>
+                <div class="testi-user">
+                    <?php if($testi['image_path']): ?><img src="<?= htmlspecialchars($testi['image_path']) ?>" alt="<?= htmlspecialchars($testi['name']) ?>"><?php endif; ?>
+                    <div>
+                        <h5><?= htmlspecialchars($testi['name']) ?></h5>
+                        <span><?= htmlspecialchars($testi['position']) ?></span>
+                    </div>
+                </div>
+            </div>
+            <?php endwhile; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
 
 <!-- SERVICES & RATECARD SECTION -->
 <section id="services" class="bg-white" style="border-top:1px solid var(--border);">
@@ -426,7 +508,10 @@ while($row = $activities->fetch_assoc()) {
                 <?php if(!empty($srv['terms'])): ?>
                     <div class="price-terms"><strong>Note/Terms:</strong> <?= nl2br(htmlspecialchars($srv['terms'])) ?></div>
                 <?php endif; ?>
-                <a href="https://wa.me/<?= htmlspecialchars($wa) ?>?text=Hello, I am interested in the <?= urlencode($srv['name']) ?> service." target="_blank" class="btn btn-outline" style="width:100%; border-radius:12px;">Order Now</a>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <a href="https://wa.me/<?= htmlspecialchars($wa) ?>?text=Hello, I am interested in the <?= urlencode($srv['name']) ?> service." target="_blank" class="btn btn-primary" style="width:100%; border-radius:12px;">Order Now</a>
+                    <a href="https://wa.me/<?= htmlspecialchars($wa) ?>?text=Hello Osman, I want to discuss a potential collaboration." target="_blank" class="btn btn-outline" style="width:100%; border-radius:12px;">Collaborate Now</a>
+                </div>
             </div>
             <?php endwhile; else: ?>
                  <p style="color:var(--text-muted); width: 100%; text-align:center;">No services added yet via CMS.</p>

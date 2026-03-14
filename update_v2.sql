@@ -1,0 +1,20 @@
+-- Update for News, Testimonials and Skill Thumbnails
+CREATE TABLE IF NOT EXISTS news (
+  id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  title VARCHAR(255) NOT NULL,
+  thumbnail VARCHAR(255) NOT NULL,
+  link VARCHAR(255) NOT NULL,
+  category ENUM('news', 'video') NOT NULL DEFAULT 'news',
+  order_num INT(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS testimonials (
+  id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  position VARCHAR(255) DEFAULT NULL,
+  content TEXT NOT NULL,
+  image_path VARCHAR(255) DEFAULT NULL,
+  order_num INT(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+ALTER TABLE skills ADD COLUMN thumbnail VARCHAR(255) DEFAULT NULL;
