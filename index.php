@@ -2,7 +2,7 @@
 require_once 'config/database.php';
 
 // Fetch settings
-$slogan = getSetting($conn, 'slogan') ?: 'Professional Portfolio';
+$slogan = getSetting($conn, 'slogan') ?: 'Empowering Businesses, Elevating Digitals';
 $intro = getSetting($conn, 'short_intro') ?: 'Welcome to my portfolio.';
 $email = getSetting($conn, 'email') ?: 'email@example.com';
 $wa = getSetting($conn, 'wa_number') ?: '62800000000';
@@ -29,638 +29,787 @@ $certs = $conn->query("SELECT * FROM certifications ORDER BY order_num ASC");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Osman Nur Chaidir - Portfolio</title>
     
-    <!-- Google Fonts -->
+    <!-- Plus Jakarta Sans Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary: #5d0001;
-            --primary-light: #8a0002;
-            --primary-dark: #3a0000;
-            --bg: #ffffff;
-            --surface: #f8f9fa;
-            --surface-alt: #ffffff;
-            --text: #2d3436;
-            --text-muted: #636e72;
-            --border: #e9ecef;
-            --gold: #d4af37;
-            
-            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            --shadow-sm: 0 4px 6px rgba(0,0,0,0.05);
-            --shadow-md: 0 10px 20px rgba(93, 0, 1, 0.08);
-            --shadow-lg: 0 20px 40px rgba(93, 0, 1, 0.12);
+            --primary: #5d0001; /* Maroon Utama */
+            --primary-hover: #7a0002;
+            --primary-light: #fdf2f2;
+            --bg: #fafafa;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-body: #475569;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 32px;
+            --transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            font-family: 'Outfit', sans-serif;
-            scroll-behavior: smooth;
-        }
-
-        body { 
-            background-color: var(--bg); 
-            color: var(--text); 
-            line-height: 1.7; 
-            overflow-x: hidden;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            padding: 0 24px; 
+        body {
+            background-color: var(--bg);
+            color: var(--text-body);
+            line-height: 1.6;
+            overflow-x: hidden;
         }
-        
-        /* Hero Section */
-        .hero { 
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* --- Animations --- */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
             position: relative;
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            text-align: center; 
-            padding: 160px 20px 100px; 
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            min-height: 80vh; 
+            padding: 120px 0 80px;
+            background-color: var(--surface);
             overflow: hidden;
         }
         
-        .hero::before {
-            content: '';
+        /* Subtle background accent */
+        .hero::after {
+            content: "";
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(93,0,1,0.03) 0%, transparent 60%);
-            animation: rotateBG 30s linear infinite;
+            top: -10%;
+            right: -5%;
+            width: 40%;
+            height: 100%;
+            background: radial-gradient(circle, var(--primary-light) 0%, rgba(255,255,255,0) 70%);
             z-index: 0;
+            border-radius: 50%;
         }
 
-        @keyframes rotateBG {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .hero-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 60px;
+            position: relative;
+            z-index: 1;
         }
 
         .hero-content {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .hero img { 
-            width: 180px; 
-            height: 180px; 
-            border-radius: 50%; 
-            object-fit: cover; 
-            border: 4px solid #fff; 
-            margin-bottom: 30px; 
-            box-shadow: var(--shadow-lg);
-            transition: var(--transition);
-        }
-        
-        .hero img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 25px 50px rgba(93,0,1,0.2);
-        }
-
-        .hero h1 { 
-            font-size: 3.5rem; 
-            font-weight: 800; 
-            margin-bottom: 15px; 
-            color: var(--text);
-            letter-spacing: -1px;
-        }
-
-        .hero h2 { 
-            font-size: 1.4rem; 
-            color: var(--primary); 
-            font-weight: 500; 
+            flex: 1.2;
             max-width: 600px;
         }
-        
-        /* Typography & Layout */
-        section { 
-            padding: 100px 0; 
+
+        .tagline {
+            display: inline-block;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            background: var(--primary-light);
+            border-radius: 50px;
+        }
+
+        .hero h1 {
+            font-size: 3.8rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-body);
+            margin-bottom: 40px;
+            line-height: 1.8;
+        }
+
+        .hero-image {
+            flex: 0.8;
+            display: flex;
+            justify-content: flex-end;
+            position: relative;
+        }
+
+        /* Styling The Hero Image Without Background */
+        .hero-image img {
+            width: 100%;
+            max-width: 450px;
+            height: auto;
+            object-fit: contain;
+            /* In a real scenario, this would be a transparent PNG from CMS */
+            /* Using a generic cutout placeholder for demonstration */
+            filter: drop-shadow(0 20px 30px rgba(93, 0, 1, 0.15));
+            transition: transform 0.5s ease;
+        }
+
+        .hero-image img:hover {
+            transform: translateY(-10px);
+        }
+
+        /* --- Shared Section Styles --- */
+        section {
+            padding: 120px 0;
+            position: relative;
         }
         
-        section.bg-alt {
+        .bg-white {
             background-color: var(--surface);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
         }
 
         .section-header {
-            text-align: center;
             margin-bottom: 60px;
         }
 
-        section h3 { 
-            font-size: 2.5rem; 
+        .section-header h2 {
+            font-size: 2.5rem;
             font-weight: 700;
-            color: var(--text);
-            position: relative;
-            display: inline-block;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
         }
 
-        section h3::after { 
-            content: ''; 
-            position: absolute;
-            left: 50%;
-            bottom: -15px;
-            transform: translateX(-50%);
-            width: 60px; 
-            height: 4px; 
-            background: var(--primary); 
-            border-radius: 4px; 
+        .section-header p {
+            font-size: 1.1rem;
+            max-width: 600px;
         }
 
-        /* Intro */
-        .intro { 
-            text-align: center; 
-            max-width: 800px; 
-            margin: 0 auto; 
-            font-size: 1.25rem; 
-            color: var(--text-muted); 
-            font-weight: 300;
-        }
-
-        /* Grid System */
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 30px; 
-        }
-
-        /* Card Styles */
-        .card { 
-            background: var(--surface-alt); 
-            padding: 40px 30px; 
-            border-radius: 20px; 
-            text-align: center; 
-            transition: var(--transition); 
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .card:hover { 
-            transform: translateY(-10px); 
-            box-shadow: var(--shadow-md); 
-            border-color: rgba(93,0,1,0.1);
-        }
-
-        .card h4 { 
-            font-size: 1.4rem; 
-            margin-bottom: 10px; 
-            color: var(--text); 
-            font-weight: 700;
-        }
-
-        /* Badges */
-        .badge { 
-            display: inline-block;
-            font-size: 0.8rem; 
-            color: var(--primary); 
-            background: rgba(93,0,1,0.05);
-            padding: 6px 14px;
-            border-radius: 20px;
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            margin-bottom: 20px; 
+        /* --- Buttons --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 32px;
+            font-size: 1rem;
             font-weight: 600;
-        }
-
-        /* Tabs System */
-        .tabs { 
-            display: flex; 
-            justify-content: center; 
-            gap: 15px; 
-            margin-bottom: 50px; 
-            flex-wrap: wrap; 
-        }
-        
-        .tab-btn { 
-            padding: 14px 30px; 
-            background: var(--surface-alt); 
-            color: var(--text-muted); 
-            border: 1px solid var(--border); 
-            border-radius: 50px; 
-            cursor: pointer; 
-            font-size: 1rem; 
-            font-weight: 500;
-            transition: var(--transition); 
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .tab-btn.active, .tab-btn:hover { 
-            background: var(--primary); 
-            border-color: var(--primary); 
-            color: white; 
-            box-shadow: 0 8px 15px rgba(93,0,1,0.2);
-            transform: translateY(-2px);
-        }
-
-        .tab-content { 
-            display: none; 
-            opacity: 0;
-            transform: translateY(20px);
+            border-radius: 50px;
             transition: var(--transition);
-        }
-        
-        .tab-content.active { 
-            display: block; 
-            opacity: 1;
-            transform: translateY(0);
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
         }
 
-        /* Experience Timeline */
-        .exp-list { 
-            max-width: 800px; 
-            margin: 0 auto; 
-        }
-        
-        .exp-item { 
-            background: var(--surface-alt); 
-            padding: 30px; 
-            border-radius: 16px; 
-            margin-bottom: 25px; 
-            border-left: 5px solid var(--primary); 
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
+        .btn-primary {
+            background-color: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(93, 0, 1, 0.2);
         }
 
-        .exp-item:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateX(5px);
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(93, 0, 1, 0.3);
+            color: #ffffff;
         }
 
-        .exp-item h4 { 
-            font-size: 1.4rem; 
-            margin-bottom: 8px; 
-            color: var(--text);
-        }
-        
-        .exp-item .date { 
-            color: var(--primary-light); 
-            font-size: 0.95rem; 
-            margin-bottom: 15px; 
-            display: inline-block; 
-            font-weight: 600; 
-            background: rgba(93,0,1,0.05);
-            padding: 4px 12px;
-            border-radius: 4px;
+        .btn-outline {
+            background-color: transparent;
+            color: var(--text-main);
+            border: 2px solid var(--border);
         }
 
-        /* Skills specific */
-        .skill-card {
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background-color: var(--primary-light);
         }
 
-        .btn-outline { 
-            display: inline-block; 
-            margin-top: 20px; 
-            color: var(--primary); 
-            background: transparent;
-            border: 2px solid var(--primary);
-            padding: 10px 20px; 
-            text-decoration: none; 
-            border-radius: 8px; 
-            font-size: 0.95rem; 
-            font-weight: 600;
-            transition: var(--transition); 
-            text-align: center;
-        }
-        
-        .btn-outline:hover { 
-            background: var(--primary); 
-            color: white;
-            box-shadow: 0 4px 10px rgba(93,0,1,0.2);
-        }
-
-        /* Certifications grid */
-        .certs-grid {
+        /* --- Organizations Grid --- */
+        .grid-3 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 30px;
         }
 
-        .cert-card { 
-            background: var(--surface-alt); 
-            border-radius: 20px; 
-            overflow: hidden; 
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
+        .clean-card {
+            background: var(--surface);
             border: 1px solid var(--border);
-        }
-
-        .cert-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .cert-card img { 
-            width: 100%; 
-            height: 240px; 
-            object-fit: cover; 
-            border-bottom: 1px solid var(--border); 
+            border-radius: var(--radius-md);
+            padding: 32px;
             transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
-        .cert-card:hover img {
-            transform: scale(1.03);
+        .clean-card:hover {
+            border-color: rgba(93, 0, 1, 0.3);
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.05);
+            transform: translateY(-5px);
+        }
+        
+        .clean-card .badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            display: inline-block;
         }
 
-        .cert-card .content { 
-            padding: 25px; 
-            position: relative;
-            background: var(--surface-alt);
-        }
-
-        .cert-card h4 { 
-            margin-bottom: 10px;
+        .clean-card h3 {
             font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            line-height: 1.4;
         }
 
-        /* Contact Section */
-        .contact { 
-            text-align: center; 
-            padding: 120px 20px;
-            background: var(--primary);
-            color: white;
-        }
-        
-        .contact h3 { color: white; }
-        .contact h3::after { background: var(--gold); }
-        .contact p { font-size: 1.2rem; margin-bottom: 40px; opacity: 0.9; }
-
-        .contact-btns { 
-            display: flex; 
-            justify-content: center; 
-            gap: 20px; 
-            flex-wrap: wrap;
-        }
-        
-        .contact-btn { 
-            padding: 16px 40px; 
-            border-radius: 50px; 
-            text-decoration: none; 
-            font-weight: 600; 
-            font-size: 1.1rem; 
-            transition: var(--transition); 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 12px; 
-        }
-        
-        .btn-email { 
-            background: white; 
-            color: var(--primary); 
-        }
-        .btn-wa { 
-            background: #25D366; 
-            color: white; 
-        }
-        
-        .contact-btn:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2); 
+        .clean-card p {
+            font-size: 1rem;
+            color: var(--text-muted);
         }
 
-        footer { 
-            text-align: center; 
-            padding: 40px; 
-            background: var(--primary-dark);
-            color: rgba(255,255,255,0.7); 
+        /* --- Sleek Tab System --- */
+        .tabs-header {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 12px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .tabs-header::-webkit-scrollbar { display: none; }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s ease;
+            white-space: nowrap;
         }
 
-        /* Scroll Animations */
-        .reveal {
+        .tab-btn:hover {
+            color: var(--text-main);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+        }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -14px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .tab-btn.active::after {
+            transform: scaleX(1);
+        }
+
+        .tab-content {
+            display: none;
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(10px);
+            transition: all 0.4s ease;
         }
-        
-        .reveal.active {
+
+        .tab-content.active {
+            display: block;
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Responsive */
+        /* --- Experience/Journey Modern List --- */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .timeline-item {
+            display: flex;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 32px;
+            transition: var(--transition);
+        }
+
+        .timeline-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(93,0,1,0.05);
+        }
+
+        .timeline-date {
+            flex: 0 0 180px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.95rem;
+            padding-right: 24px;
+        }
+
+        .timeline-content {
+            flex: 1;
+            border-left: 1px solid var(--border);
+            padding-left: 32px;
+        }
+
+        .timeline-content h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 12px;
+        }
+
+        .timeline-content p {
+            color: var(--text-body);
+            font-size: 1rem;
+        }
+
+        /* --- Certifications Grid --- */
+        .cert-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .cert-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+            border-color: rgba(93,0,1,0.2);
+        }
+
+        .cert-image {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            background: #f1f5f9;
+        }
+
+        .cert-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Don't crop heavily, show the cert */
+            padding: 10px;
+            transition: transform 0.5s ease;
+        }
+
+        .cert-card:hover .cert-image img {
+            transform: scale(1.05);
+        }
+
+        .cert-info {
+            padding: 24px;
+        }
+
+        .cert-info h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        /* --- CTA / Footer --- */
+        .cta-section {
+            background-color: var(--primary);
+            border-radius: var(--radius-lg);
+            padding: 80px 40px;
+            text-align: center;
+            margin: 0 24px 120px;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.05)" stroke-width="2" fill="none"/></svg>') repeat;
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-content h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .cta-content p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-btns {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .btn-white {
+            background: #ffffff;
+            color: var(--primary);
+        }
+        .btn-white:hover {
+            background: #f8f9fa;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .btn-glass {
+            background: rgba(255,255,255,0.1);
+            color: #ffffff;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .btn-glass:hover {
+            background: rgba(255,255,255,0.2);
+            color: #ffffff;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* --- Link with Arrow --- */
+        .link-arrow {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            margin-top: auto;
+            padding-top: 16px;
+            font-size: 0.95rem;
+        }
+        .link-arrow svg {
+            margin-left: 6px;
+            transition: transform 0.3s ease;
+        }
+        .clean-card:hover .link-arrow svg {
+            transform: translateX(4px);
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 992px) {
+            .hero-container {
+                flex-direction: column-reverse;
+                text-align: center;
+            }
+            .hero-content {
+                max-width: 100%;
+            }
+            .hero-image {
+                justify-content: center;
+            }
+            .hero h1 { font-size: 3rem; }
+            .timeline-item {
+                flex-direction: column;
+                padding: 24px;
+            }
+            .timeline-date {
+                flex: none;
+                margin-bottom: 16px;
+                padding-right: 0;
+            }
+            .timeline-content {
+                border-left: none;
+                padding-left: 0;
+                border-top: 1px solid var(--border);
+                padding-top: 16px;
+            }
+        }
+
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .hero h2 { font-size: 1.2rem; }
-            section { padding: 70px 0; }
-            .tabs { gap: 10px; }
-            .tab-btn { padding: 10px 20px; font-size: 0.9rem; }
-            .contact-btns { flex-direction: column; align-items: stretch; }
-            .contact-btn { justify-content: center; }
+            section { padding: 80px 0; }
+            .hero { padding: 80px 0 40px; }
+            .hero h1 { font-size: 2.2rem; }
+            .section-header h2 { font-size: 2rem; }
+            .cta-section { padding: 60px 24px; margin: 0 16px 80px; }
+            .cta-content h2 { font-size: 2rem; }
+            .cta-btns { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
-<header class="hero">
-    <div class="hero-content reveal">
-        <img src="https://ui-avatars.com/api/?name=Osman+Nur+Chaidir&background=5d0001&color=fff&size=300" alt="Osman Nur Chaidir">
-        <h1>Osman Nur Chaidir</h1>
-        <h2><?= htmlspecialchars($slogan) ?></h2>
-    </div>
-</header>
-
-<section class="container reveal">
-    <div class="intro">
-        <p><?= nl2br(htmlspecialchars($intro)) ?></p>
+<!-- HERO SECTION -->
+<section class="hero">
+    <div class="container hero-container">
+        <div class="hero-content fade-in-up">
+            <span class="tagline">Welcome to my profile</span>
+            <h1><?= htmlspecialchars($slogan) ?></h1>
+            <p><?= nl2br(htmlspecialchars($intro)) ?></p>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: flex-start;">
+                <button class="btn btn-primary" onclick="document.getElementById('contact').scrollIntoView();">Let's Connect</button>
+                <button class="btn btn-outline" onclick="document.getElementById('experience').scrollIntoView();">View Experience</button>
+            </div>
+        </div>
+        
+        <!-- Large Image Without Background -->
+        <div class="hero-image fade-in-up" style="transition-delay: 0.2s;">
+            <!-- Placeholder for cut-out image -->
+            <img src="https://cdni.iconscout.com/illustration/premium/thumb/businessman-posing-with-crossed-arms-illustration-download-in-svg-png-gif-file-formats--business-man-male-employee-manager-pack-professionals-illustrations-4001927.png" 
+                 alt="Osman Nur Chaidir" 
+                 style="opacity: 0.9;">
+        </div>
     </div>
 </section>
 
-<!-- Business & Orgs -->
-<section class="bg-alt">
-    <div class="container reveal">
-        <div class="section-header">
-            <h3>Business & Organizations</h3>
+<!-- ORGANIZATIONS SECTION -->
+<section id="organizations" class="bg-white">
+    <div class="container">
+        <div class="section-header fade-in-up">
+            <h2>Business & Organizations</h2>
+            <p class="text-muted">The ventures and organizations I actively lead and participate in.</p>
         </div>
-        <div class="grid">
+        
+        <div class="grid-3 fade-in-up" style="transition-delay: 0.2s;">
             <?php if($orgs->num_rows > 0): while($org = $orgs->fetch_assoc()): ?>
-            <div class="card">
+            <div class="clean-card">
                 <span class="badge"><?= htmlspecialchars($org['type']) ?></span>
-                <h4><?= htmlspecialchars($org['name']) ?></h4>
-                <p class="text-muted"><?= htmlspecialchars($org['role']) ?></p>
+                <h3><?= htmlspecialchars($org['name']) ?></h3>
+                <p><?= htmlspecialchars($org['role']) ?></p>
             </div>
             <?php endwhile; else: ?>
-                <p style="text-align:center;width:100%;color:#666;">No data added yet via CMS.</p>
+                <p style="color:var(--text-muted);">No data added yet via CMS.</p>
             <?php endif; ?>
         </div>
     </div>
 </section>
 
-<!-- Experiences -->
-<section class="container reveal">
-    <div class="section-header">
-        <h3>Professional Journey</h3>
-    </div>
-    
-    <div class="tabs">
-        <button class="tab-btn active" onclick="openTab('exp', 'work', event)">Work Experience</button>
-        <button class="tab-btn" onclick="openTab('exp', 'speaking', event)">Speaking / Seminars</button>
-        <button class="tab-btn" onclick="openTab('exp', 'writing', event)">Written Works</button>
-    </div>
-    
-    <div class="exp-list">
-        <?php foreach(['work', 'speaking', 'writing'] as $idx => $cat): ?>
-            <div id="exp-<?= $cat ?>" class="tab-content exp-content <?= $idx === 0 ? 'active' : '' ?>">
-                <?php if(empty($expList[$cat])): ?>
-                    <p style="text-align:center; color:#666;">No entries yet.</p>
-                <?php else: foreach($expList[$cat] as $e): ?>
-                    <div class="exp-item">
-                        <h4><?= htmlspecialchars($e['title']) ?></h4>
-                        <span class="date"><?= htmlspecialchars($e['date_range']) ?></span>
-                        <p><?= nl2br(htmlspecialchars($e['description'])) ?></p>
-                    </div>
-                <?php endforeach; endif; ?>
-            </div>
-        <?php endforeach; ?>
-    </div>
-</section>
-
-<!-- Skills -->
-<section class="bg-alt">
-    <div class="container reveal">
-        <div class="section-header">
-            <h3>Technical Skills</h3>
+<!-- EXPERIENCES SECTION (Modern List) -->
+<section id="experience">
+    <div class="container">
+        <div class="section-header fade-in-up">
+            <h2>Professional Journey</h2>
+            <p class="text-muted">My track record across various roles, speaking engagements, and publications.</p>
         </div>
         
-        <div class="tabs">
-            <button class="tab-btn active" onclick="openTab('skill', 'digital_marketing', event)">Digital Marketing</button>
-            <button class="tab-btn" onclick="openTab('skill', 'business_mentor', event)">Business Mentor</button>
-            <button class="tab-btn" onclick="openTab('skill', 'website_development', event)">Web Development</button>
-        </div>
-
-        <div>
-            <?php foreach(['digital_marketing', 'business_mentor', 'website_development'] as $idx => $cat): ?>
-                <div id="skill-<?= $cat ?>" class="tab-content skill-content <?= $idx === 0 ? 'active' : '' ?>">
-                    <div class="grid">
-                    <?php if(empty($skillList[$cat])): ?>
-                        <p style="text-align:center;width:100%;color:#666;">No entries yet.</p>
-                    <?php else: foreach($skillList[$cat] as $s): ?>
-                        <div class="card skill-card">
-                            <h4><?= htmlspecialchars($s['name']) ?></h4>
-                            <?php if(!empty($s['portfolio_link'])): ?>
-                                <a href="<?= htmlspecialchars($s['portfolio_link']) ?>" target="_blank" class="btn-outline">View Portfolio &rarr;</a>
-                            <?php endif; ?>
+        <div class="fade-in-up" style="transition-delay: 0.2s;">
+            <!-- Sleek Tabs -->
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="switchTab(this, 'exp', 'work')">Work Experience</button>
+                <button class="tab-btn" onclick="switchTab(this, 'exp', 'speaking')">Speaking / Seminars</button>
+                <button class="tab-btn" onclick="switchTab(this, 'exp', 'writing')">Written Works</button>
+            </div>
+            
+            <div class="exp-contents">
+                <?php foreach(['work', 'speaking', 'writing'] as $idx => $cat): ?>
+                    <div id="exp-<?= $cat ?>" class="tab-content <?= $idx === 0 ? 'active' : '' ?>">
+                        <div class="timeline">
+                            <?php if(empty($expList[$cat])): ?>
+                                <p style="color:var(--text-muted); padding: 20px;">No entries available.</p>
+                            <?php else: foreach($expList[$cat] as $e): ?>
+                                <div class="timeline-item">
+                                    <div class="timeline-date"><?= htmlspecialchars($e['date_range']) ?></div>
+                                    <div class="timeline-content">
+                                        <h4><?= htmlspecialchars($e['title']) ?></h4>
+                                        <p><?= nl2br(htmlspecialchars($e['description'])) ?></p>
+                                    </div>
+                                </div>
+                            <?php endforeach; endif; ?>
                         </div>
-                    <?php endforeach; endif; ?>
                     </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SKILLS SECTION (Clean Cards) -->
+<section id="skills" class="bg-white">
+    <div class="container">
+        <div class="section-header fade-in-up">
+            <h2>Technical Skills</h2>
+            <p class="text-muted">Core competencies and technical capabilities I bring to the table.</p>
+        </div>
+
+        <div class="fade-in-up" style="transition-delay: 0.2s;">
+            <!-- Sleek Tabs -->
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="switchTab(this, 'skill', 'digital_marketing')">Digital Marketing</button>
+                <button class="tab-btn" onclick="switchTab(this, 'skill', 'business_mentor')">Business Mentor</button>
+                <button class="tab-btn" onclick="switchTab(this, 'skill', 'website_development')">Web Development</button>
+            </div>
+
+            <div class="skill-contents">
+                <?php foreach(['digital_marketing', 'business_mentor', 'website_development'] as $idx => $cat): ?>
+                    <div id="skill-<?= $cat ?>" class="tab-content <?= $idx === 0 ? 'active' : '' ?>">
+                        <div class="grid-3">
+                        <?php if(empty($skillList[$cat])): ?>
+                            <p style="color:var(--text-muted); padding: 20px;">No entries available.</p>
+                        <?php else: foreach($skillList[$cat] as $s): ?>
+                            <div class="clean-card">
+                                <h3><?= htmlspecialchars($s['name']) ?></h3>
+                                <?php if(!empty($s['portfolio_link'])): ?>
+                                    <a href="<?= htmlspecialchars($s['portfolio_link']) ?>" target="_blank" class="link-arrow">
+                                        View Project 
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; endif; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CERTIFICATIONS (Modern Grid) -->
+<section id="certifications">
+    <div class="container">
+        <div class="section-header fade-in-up">
+            <h2>Certifications & Achievements</h2>
+            <p class="text-muted">Recognitions and formal qualifications acquired over the years.</p>
+        </div>
+        
+        <div class="grid-3 fade-in-up" style="transition-delay: 0.2s;">
+            <?php if($certs->num_rows > 0): while($crt = $certs->fetch_assoc()): ?>
+            <div class="cert-card">
+                <div class="cert-image">
+                    <!-- Default to a placeholder if empty -->
+                    <img src="<?= htmlspecialchars($crt['image_path']) ?: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800' ?>" alt="<?= htmlspecialchars($crt['title']) ?>" loading="lazy">
                 </div>
-            <?php endforeach; ?>
+                <div class="cert-info">
+                    <h4><?= htmlspecialchars($crt['title']) ?></h4>
+                    <p style="color:var(--text-muted); font-size:0.95rem; margin-top:8px; line-height: 1.5;">
+                        <?= nl2br(htmlspecialchars($crt['description'])) ?>
+                    </p>
+                </div>
+            </div>
+            <?php endwhile; else: ?>
+                 <p style="color:var(--text-muted); width: 100%;">No data added yet via CMS.</p>
+            <?php endif; ?>
         </div>
     </div>
 </section>
 
-<!-- Certifications -->
-<section class="container reveal">
-    <div class="section-header">
-        <h3>Certifications & Achievements</h3>
-    </div>
-    <div class="certs-grid">
-        <?php if($certs->num_rows > 0): while($crt = $certs->fetch_assoc()): ?>
-        <div class="cert-card">
-            <div style="overflow: hidden;">
-                <img src="<?= htmlspecialchars($crt['image_path']) ?: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800' ?>" alt="<?= htmlspecialchars($crt['title']) ?>">
+<!-- CTA / REACH OUT SECTION -->
+<section id="contact" style="padding: 0;">
+    <div class="cta-section fade-in-up">
+        <div class="cta-content">
+            <h2>Let's Do Great Work Together</h2>
+            <p>Ready to discuss your next big project or looking for a seasoned mentor? Reach out to me directly through email or WhatsApp.</p>
+            <div class="cta-btns">
+                <a href="mailto:<?= htmlspecialchars($email) ?>" class="btn btn-white">
+                    <svg style="margin-right:8px;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    Email Me
+                </a>
+                <a href="https://wa.me/<?= htmlspecialchars($wa) ?>" target="_blank" class="btn btn-glass">
+                    <svg style="margin-right:8px;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    WhatsApp
+                </a>
             </div>
-            <div class="content">
-                <h4><?= htmlspecialchars($crt['title']) ?></h4>
-                <p style="color:var(--text-muted); font-size:0.95rem;"><?= nl2br(htmlspecialchars($crt['description'])) ?></p>
-            </div>
-        </div>
-        <?php endwhile; else: ?>
-             <p style="text-align:center;width:100%;color:#666;">No data added yet via CMS.</p>
-        <?php endif; ?>
-    </div>
-</section>
-
-<!-- Reach Out -->
-<section class="contact">
-    <div class="container reveal">
-        <div class="section-header">
-            <h3>Let's Connect</h3>
-        </div>
-        <p>Ready to collaborate or need a mentor? Reach out through the following channels.</p>
-        <div class="contact-btns">
-            <a href="mailto:<?= htmlspecialchars($email) ?>" class="contact-btn btn-email">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                Email Me
-            </a>
-            <a href="https://wa.me/<?= htmlspecialchars($wa) ?>" target="_blank" class="contact-btn btn-wa">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                WhatsApp
-            </a>
         </div>
     </div>
 </section>
 
 <footer>
-    <p>&copy; <?= date('Y') ?> Osman Nur Chaidir. All Rights Reserved.</p>
+    <div class="container">
+        <p>&copy; <?= date('Y') ?> Osman Nur Chaidir. Crafted with excellence.</p>
+    </div>
 </footer>
 
 <script>
-    // Tab switching logic
-    function openTab(group, tabId, event) {
-        // Handle buttons
-        const btns = event.target.parentElement.querySelectorAll('.tab-btn');
-        btns.forEach(b => b.classList.remove('active'));
-        event.target.classList.add('active');
-
-        // Handle content with smooth transition
-        const contents = document.querySelectorAll(`.${group}-content`);
-        contents.forEach(c => {
-            c.style.opacity = '0';
-            c.style.transform = 'translateY(10px)';
-            setTimeout(() => c.classList.remove('active'), 200); // Wait for fade out
-        });
+    // Modern Tab Switcher Algorithm
+    function switchTab(btnElement, group, targetId) {
+        // Reset buttons in this specific tab group
+        const header = btnElement.parentElement;
+        const buttons = header.querySelectorAll('.tab-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
         
-        const targetContent = document.getElementById(`${group}-${tabId}`);
+        // Set current true
+        btnElement.classList.add('active');
+
+        // Find the container of these tabs
+        const contentContainer = header.nextElementSibling;
+        const contents = contentContainer.querySelectorAll('.tab-content');
+        
+        // Hide all
+        contents.forEach(content => {
+            content.style.opacity = '0';
+            content.style.transform = 'translateY(10px)';
+            setTimeout(() => content.classList.remove('active'), 300);
+        });
+
+        // Show target
+        const targetElement = document.getElementById(`${group}-${targetId}`);
         setTimeout(() => {
-            targetContent.classList.add('active');
-            // Small delay to ensure display:block applies before opacity changes
-            setTimeout(() => {
-                targetContent.style.opacity = '1';
-                targetContent.style.transform = 'translateY(0)';
-            }, 50);
-        }, 200);
+            targetElement.classList.add('active');
+            // Trigger reflow
+            void targetElement.offsetWidth;
+            targetElement.style.opacity = '1';
+            targetElement.style.transform = 'translateY(0)';
+        }, 350);
     }
 
-    // Scroll Animation Observer Setup
-    document.addEventListener('DOMContentLoaded', () => {
-        const reveals = document.querySelectorAll('.reveal');
-        
-        // Initial check in case elements are already in view
-        checkReveal();
+    // Modern Intersection Observer for smooth reveal on scroll
+    document.addEventListener("DOMContentLoaded", () => {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
 
-        function checkReveal() {
-            const windowHeight = window.innerHeight;
-            const elementVisible = 100;
-
-            reveals.forEach(reveal => {
-                const elementTop = reveal.getBoundingClientRect().top;
-                if (elementTop < windowHeight - elementVisible) {
-                    reveal.classList.add('active');
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
                 }
             });
-        }
+        }, observerOptions);
 
-        window.addEventListener('scroll', checkReveal);
-        
-        // Run once right away
-        setTimeout(checkReveal, 100);
+        const elementsToReveal = document.querySelectorAll('.fade-in-up');
+        elementsToReveal.forEach(el => observer.observe(el));
     });
 </script>
 </body>
