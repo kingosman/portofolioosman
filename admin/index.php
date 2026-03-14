@@ -11,6 +11,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $page === 'settings') {
         $stmt->bind_param("ss", $value, $key);
         $stmt->execute();
     }
+
+    // Handle Hero Image Upload
+    if (isset($_FILES['hero_image']) && $_FILES['hero_image']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = '../assets/images/';
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+        
+        $tmpName = $_FILES['hero_image']['tmp_name'];
+        $fileName = 'hero_' . time() . '_' . basename($_FILES['hero_image']['name']);
+        $targetFile = $uploadDir . $fileName;
+        
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (in_array($_FILES['hero_image']['type'], $allowedTypes)) {
+            if (move_uploaded_file($tmpName, $targetFile)) {
+                $dbPath = 'assets/images/' . $fileName;
+                $stmt = $conn->prepare("UPDATE settings SET value = ? WHERE key_name = 'hero_image'");
+                $stmt->bind_param("s", $dbPath);
+                $stmt->execute();
+            }
+        }
+    }
+    
     $success = "Settings updated successfully!";
 }
 
@@ -23,11 +44,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $page === 'settings') {
     <h1>Global Settings & Facts</h1>
     <?php if (isset($success)) echo "<div class='success'>$success</div>"; ?>
     <div class="card">
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             <h3>General Settings</h3>
             <div class="form-group">
                 <label>Slogan</label>
                 <input type="text" name="settings[slogan]" value="<?= htmlspecialchars(getSetting($conn, 'slogan')) ?>" required>
+            </div>
+            <div class="form-group">
+                <label>Hero Image (PNG without background recommended)</label>
+                <?php $currentHero = getSetting($conn, 'hero_image'); ?>
+                <?php if ($currentHero): ?>
+                    <div style="margin-bottom:10px;">
+                        <img src="../<?= htmlspecialchars($currentHero) ?>" height="100" style="background:#eee; border-radius:8px;">
+                    </div>
+                <?php endif; ?>
+                <input type="file" name="hero_image" accept="image/*">
             </div>
             <div class="form-group">
                 <label>Short Introduction</label>

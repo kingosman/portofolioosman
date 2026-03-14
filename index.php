@@ -6,6 +6,7 @@ $slogan = getSetting($conn, 'slogan') ?: 'Empowering Businesses, Elevating Digit
 $intro = getSetting($conn, 'short_intro') ?: 'Welcome to my portfolio.';
 $email = getSetting($conn, 'email') ?: 'email@example.com';
 $wa = getSetting($conn, 'wa_number') ?: '62800000000';
+$hero_image = getSetting($conn, 'hero_image') ?: 'https://cdni.iconscout.com/illustration/premium/thumb/businessman-posing-with-crossed-arms-illustration-download-in-svg-png-gif-file-formats--business-man-male-employee-manager-pack-professionals-illustrations-4001927.png';
 
 $fact_wirausaha = getSetting($conn, 'fact_wirausaha');
 $fact_bisnis_dimentori = getSetting($conn, 'fact_bisnis_dimentori');
@@ -212,7 +213,7 @@ while($row = $activities->fetch_assoc()) {
             </div>
         </div>
         <div class="hero-image fade-in-up" style="transition-delay: 0.2s;">
-            <img src="https://cdni.iconscout.com/illustration/premium/thumb/businessman-posing-with-crossed-arms-illustration-download-in-svg-png-gif-file-formats--business-man-male-employee-manager-pack-professionals-illustrations-4001927.png" alt="Osman Nur Chaidir">
+            <img src="<?= htmlspecialchars($hero_image) ?>" alt="Osman Nur Chaidir">
         </div>
     </div>
 </section>
