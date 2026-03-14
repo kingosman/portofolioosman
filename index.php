@@ -55,7 +55,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://kingosman.id/"> <!-- Replace with your actual domain later -->
+    <meta property="og:url" content="https://osmannurchaidir.ct.ws/"> 
     <meta property="og:title" content="Osman Nur Chaidir | Mentor Pengusaha Muda Berpengalaman 10 Tahun">
     <meta property="og:description" content="Berwirausaha sejak kelas 3 SMP, Osman Nur Chaidir kini telah membimbing lebih dari 150 pengusaha. Dapatkan insight bisnis berbasis pengalaman 10 tahun lebih.">
     <meta property="og:image" content="<?= htmlspecialchars($hero_image) ?>">
