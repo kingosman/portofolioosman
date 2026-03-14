@@ -23,7 +23,7 @@ $expList = ['work'=>[], 'speaking'=>[], 'writing'=>[]];
 while($row = $exps->fetch_assoc()) $expList[$row['category']][] = $row;
 
 $skills = $conn->query("SELECT * FROM skills ORDER BY order_num ASC");
-$skillList = ['digital_marketing'=>[], 'business_mentor'=>[], 'website_development'=>[]];
+$skillList = ['digital_marketing'=>[], 'business_mentor'=>[], 'website_development'=>[], 'sociology'=>[], 'others'=>[]];
 while($row = $skills->fetch_assoc()) $skillList[$row['category']][] = $row;
 
 $certs = $conn->query("SELECT * FROM certifications ORDER BY order_num ASC");
@@ -127,8 +127,10 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
 
         /* Activity Sliders & Logos */
         .swiper-activities { width: 100%; padding: 20px 0 50px; }
-        .swiper-activities .swiper-slide { width: 300px; height: 350px; border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .swiper-activities .swiper-slide { width: 360px; height: 270px; border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); position: relative; }
         .swiper-activities img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .activity-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: #fff; transform: translateY(100%); transition: transform 0.3s ease; }
+        .swiper-activities .swiper-slide:hover .activity-overlay { transform: translateY(0); }
         .swiper-activities .swiper-slide:hover img { transform: scale(1.05); }
         .swiper-pagination-bullet-active { background: var(--primary) !important; }
 
@@ -310,6 +312,11 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
                 <?php foreach($photos as $p): ?>
                 <div class="swiper-slide">
                     <img src="<?= htmlspecialchars($p['image_path']) ?>" alt="<?= htmlspecialchars($p['title']) ?>">
+                    <?php if(!empty($p['title'])): ?>
+                        <div class="activity-overlay">
+                            <h4 style="font-weight:700; margin:0; font-size:1.1rem;"><?= htmlspecialchars($p['title']) ?></h4>
+                        </div>
+                    <?php endif; ?>
                 </div>
                 <?php endforeach; ?>
             </div>
@@ -394,6 +401,9 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
                                     <div class="timeline-content">
                                         <h4><?= htmlspecialchars($e['title']) ?></h4>
                                         <p><?= nl2br(htmlspecialchars($e['description'])) ?></p>
+                                        <?php if(!empty($e['link'])): ?>
+                                            <a href="<?= htmlspecialchars($e['link']) ?>" target="_blank" style="color:var(--primary); font-weight:700; text-decoration:none; font-size:0.9rem; display:inline-block; margin-top:10px;">Listen / Read Work &rarr;</a>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             <?php endforeach; endif; ?>
@@ -416,9 +426,11 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
                 <button class="tab-btn active" onclick="switchTab(this, 'skill', 'digital_marketing')">Digital Marketing</button>
                 <button class="tab-btn" onclick="switchTab(this, 'skill', 'business_mentor')">Business Mentor</button>
                 <button class="tab-btn" onclick="switchTab(this, 'skill', 'website_development')">Web Development</button>
+                <button class="tab-btn" onclick="switchTab(this, 'skill', 'sociology')">Sociology</button>
+                <button class="tab-btn" onclick="switchTab(this, 'skill', 'others')">Others</button>
             </div>
             <div class="skill-contents">
-                <?php foreach(['digital_marketing', 'business_mentor', 'website_development'] as $idx => $cat): ?>
+                <?php foreach(['digital_marketing', 'business_mentor', 'website_development', 'sociology', 'others'] as $idx => $cat): ?>
                     <div id="skill-<?= $cat ?>" class="tab-content <?= $idx === 0 ? 'active' : '' ?>">
                         <div class="grid-3">
                         <?php if(empty($skillList[$cat])): ?>
@@ -565,6 +577,20 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
     </div>
 </section>
 
+
+<!-- FREE BUSINESS DIAGNOSTIC BANNER -->
+<section id="banner-diagnostic" style="padding: 0 0 100px 0;">
+    <div class="container">
+        <div style="background: linear-gradient(135deg, #5d0001 0%, #a50002 100%); border-radius: var(--radius-lg); padding: 60px 40px; color: #fff; text-align: center; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(93, 0, 1, 0.2);">
+            <div style="position: absolute; top: -20px; right: -20px; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%; z-index: 0;"></div>
+            <div style="position: relative; z-index: 1;">
+                <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 15px; letter-spacing: -0.01em;">FREE BUSINESS DIAGNOSTIC & PLANNING CANVAS</h2>
+                <p style="opacity: 0.9; font-size: 1.15rem; max-width: 700px; margin: 0 auto 30px;">Get a comprehensive overview of your business health and a clear roadmap for growth. Limited sessions available.</p>
+                <a href="https://kamalektur.myr.id/" target="_blank" class="btn btn-white" style="background:#fff; color:#5d0001; font-weight:800; padding:18px 40px; border-radius: 12px; font-size: 1.1rem;">Claim Your Free Session &rarr;</a>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- CTA / CONTACT -->
 <section id="contact" style="padding: 0;">

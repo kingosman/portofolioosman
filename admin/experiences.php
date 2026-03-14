@@ -17,17 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = $_POST['description'] ?? '';
     $category = $_POST['category'] ?? 'work';
     $date_range = $_POST['date_range'] ?? '';
+    $link = $_POST['link'] ?? '';
     $order_num = (int)$_POST['order_num'] ?? 0;
 
     if (isset($_POST['id']) && $_POST['id'] !== '') {
         $id = (int)$_POST['id'];
-        $stmt = $conn->prepare("UPDATE experiences SET title=?, description=?, category=?, date_range=?, order_num=? WHERE id=?");
-        $stmt->bind_param("ssssii", $title, $description, $category, $date_range, $order_num, $id);
+        $stmt = $conn->prepare("UPDATE experiences SET title=?, description=?, category=?, date_range=?, link=?, order_num=? WHERE id=?");
+        $stmt->bind_param("sssssii", $title, $description, $category, $date_range, $link, $order_num, $id);
         $stmt->execute();
         $success = "Updated successfully.";
     } else {
-        $stmt = $conn->prepare("INSERT INTO experiences (title, description, category, date_range, order_num) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssi", $title, $description, $category, $date_range, $order_num);
+        $stmt = $conn->prepare("INSERT INTO experiences (title, description, category, date_range, link, order_num) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssi", $title, $description, $category, $date_range, $link, $order_num);
         $stmt->execute();
         $success = "Added successfully.";
     }
@@ -71,12 +72,12 @@ if (isset($_GET['edit'])) {
             </select>
         </div>
         <div class="form-group">
-            <label>Date Range (e.g., 'Jan 2020 - Present')</label>
-            <input type="text" name="date_range" value="<?= htmlspecialchars($edit_data['date_range'] ?? '') ?>">
+            <label>Link (Highly recommended for Written Works)</label>
+            <input type="text" name="link" value="<?= htmlspecialchars($edit_data['link'] ?? '') ?>" placeholder="https://...">
         </div>
         <div class="form-group">
             <label>Order Number</label>
-            <input type="number" name="order_num" value="<?= $edit_data['order_num'] ?? 0 ?>" required class="form-group" style="padding:10px; width:100px;">
+            <input type="number" name="order_num" value="<?= $edit_data['order_num'] ?? 0 ?>" required style="padding:10px; width:100px;">
         </div>
         <button type="submit" class="btn"><?= $edit_data ? 'Update' : 'Add' ?></button>
         <?php if ($edit_data): ?>
@@ -92,6 +93,7 @@ if (isset($_GET['edit'])) {
             <th>Title</th>
             <th>Category</th>
             <th>Date</th>
+            <th>Link</th>
             <th>Order</th>
             <th>Actions</th>
         </tr>
@@ -100,6 +102,7 @@ if (isset($_GET['edit'])) {
             <td><?= htmlspecialchars($row['title']) ?></td>
             <td><?= htmlspecialchars($row['category']) ?></td>
             <td><?= htmlspecialchars($row['date_range']) ?></td>
+            <td><?= $row['link'] ? '<a href="'.htmlspecialchars($row['link']).'" target="_blank">View Link</a>' : '-' ?></td>
             <td><?= $row['order_num'] ?></td>
             <td>
                 <a href="experiences.php?edit=<?= $row['id'] ?>" class="btn btn-sm">Edit</a>

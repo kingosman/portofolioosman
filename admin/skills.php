@@ -84,6 +84,8 @@ if (isset($_GET['edit'])) {
                 <option value="digital_marketing" <?= ($edit_data['category'] ?? '') === 'digital_marketing' ? 'selected' : '' ?>>Digital Marketing</option>
                 <option value="business_mentor" <?= ($edit_data['category'] ?? '') === 'business_mentor' ? 'selected' : '' ?>>Business Mentor</option>
                 <option value="website_development" <?= ($edit_data['category'] ?? '') === 'website_development' ? 'selected' : '' ?>>Website Development</option>
+                <option value="sociology" <?= ($edit_data['category'] ?? '') === 'sociology' ? 'selected' : '' ?>>Sociology</option>
+                <option value="others" <?= ($edit_data['category'] ?? '') === 'others' ? 'selected' : '' ?>>Others</option>
             </select>
         </div>
         <div class="form-group">
