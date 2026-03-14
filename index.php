@@ -187,13 +187,15 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
         .news-content { padding: 20px; }
         .news-content h4 { font-size: 1.1rem; color: var(--text-main); font-weight: 700; line-height: 1.4; }
 
-        .testi-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 40px; position: relative; transition: var(--transition); }
-        .testi-card::before { content: '"'; position: absolute; top: 20px; right: 30px; font-size: 8rem; color: var(--primary-light); font-family: serif; line-height: 1; z-index: 0; }
-        .testi-content { position: relative; z-index: 1; font-size: 1.1rem; font-style: italic; margin-bottom: 30px; color: var(--text-body); }
-        .testi-user { display: flex; align-items: center; gap: 15px; position: relative; z-index: 1; }
-        .testi-user img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-light); }
-        .testi-user h5 { font-weight: 700; color: var(--text-main); }
-        .testi-user span { font-size: 0.85rem; color: var(--text-muted); }
+        .testi-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 30px; position: relative; transition: var(--transition); height: 100%; display: flex; flex-direction: column; }
+        .testi-card::before { content: '"'; position: absolute; top: 15px; right: 20px; font-size: 5rem; color: var(--primary-light); font-family: serif; line-height: 1; z-index: 0; opacity: 0.5; }
+        .testi-content { position: relative; z-index: 1; font-size: 0.95rem; font-style: italic; margin-bottom: 25px; color: var(--text-body); line-height: 1.6; flex: 1; }
+        .testi-user { display: flex; align-items: center; gap: 12px; position: relative; z-index: 1; }
+        .testi-user img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-light); }
+        .testi-user h5 { font-weight: 700; color: var(--text-main); font-size: 0.95rem; }
+        .testi-user span { font-size: 0.8rem; color: var(--text-muted); }
+
+        .swiper-testimonials { padding: 20px 10px 60px; }
 
         .skill-thumb-box { width: 50px; height: 50px; background: var(--primary-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
         .skill-thumb-box img { width: 30px; height: 30px; object-fit: contain; }
@@ -510,19 +512,27 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             <h2>Kind Words</h2>
             <p class="text-muted">What partners and clients say about our collaboration.</p>
         </div>
-        <div class="grid-3 fade-in-up">
-            <?php while($testi = $testimonials->fetch_assoc()): ?>
-            <div class="testi-card">
-                <div class="testi-content">"<?= htmlspecialchars($testi['content']) ?>"</div>
-                <div class="testi-user">
-                    <?php if($testi['image_path']): ?><img src="<?= htmlspecialchars($testi['image_path']) ?>" alt="<?= htmlspecialchars($testi['name']) ?>"><?php endif; ?>
-                    <div>
-                        <h5><?= htmlspecialchars($testi['name']) ?></h5>
-                        <span><?= htmlspecialchars($testi['position']) ?></span>
+        <div class="fade-in-up">
+            <div class="swiper swiper-testimonials">
+                <div class="swiper-wrapper">
+                    <?php while($testi = $testimonials->fetch_assoc()): ?>
+                    <div class="swiper-slide">
+                        <div class="testi-card">
+                            <div class="testi-content">"<?= htmlspecialchars($testi['content']) ?>"</div>
+                            <div class="testi-user">
+                                <?php if($testi['image_path']): ?><img src="<?= htmlspecialchars($testi['image_path']) ?>" alt="<?= htmlspecialchars($testi['name']) ?>"><?php endif; ?>
+                                <div>
+                                    <h5><?= htmlspecialchars($testi['name']) ?></h5>
+                                    <span><?= htmlspecialchars($testi['position']) ?></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <?php endwhile; ?>
                 </div>
+                <!-- Add Pagination -->
+                <div class="swiper-pagination"></div>
             </div>
-            <?php endwhile; ?>
         </div>
     </div>
 </section>
@@ -637,6 +647,21 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
                 breakpoints: {
                     640: { slidesPerView: 4, spaceBetween: 40 },
                     1024: { slidesPerView: 5, spaceBetween: 50 },
+                }
+            });
+        }
+
+        // Testimonials
+        if(document.querySelector('.swiper-testimonials')) {
+            new Swiper('.swiper-testimonials', {
+                slidesPerView: 1,
+                spaceBetween: 30,
+                pagination: { el: ".swiper-pagination", clickable: true },
+                loop: true,
+                autoplay: { delay: 4000, disableOnInteraction: false },
+                breakpoints: {
+                    768: { slidesPerView: 2 },
+                    1024: { slidesPerView: 3 },
                 }
             });
         }
