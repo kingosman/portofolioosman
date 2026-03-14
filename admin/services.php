@@ -16,13 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'] ?? '';
     $price = $_POST['price'] ?? '';
     $description = $_POST['description'] ?? '';
-    $terms = $_POST['terms'] ?? '';
     $order_num = (int)$_POST['order_num'] ?? 0;
 
     if (isset($_POST['id']) && $_POST['id'] !== '') {
         $id = (int)$_POST['id'];
         $stmt = $conn->prepare("UPDATE services SET name=?, price=?, description=?, order_num=? WHERE id=?");
-        $stmt->bind_param("sssi i", $name, $price, $description, $order_num, $id);
+        $stmt->bind_param("sssii", $name, $price, $description, $order_num, $id);
         $stmt->execute();
         $success = "Updated successfully.";
     } else {
@@ -45,12 +44,15 @@ if (isset($_GET['edit'])) {
 }
 ?>
 
+<!-- Quill Editor CSS -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
 <h1>Manage Services & Rate Card</h1>
 <?php if ($success) echo "<div class='success'>$success</div>"; ?>
 
 <div class="card">
     <h3><?= $edit_data ? 'Edit' : 'Add New' ?> Service</h3>
-    <form method="POST" action="services.php">
+    <form method="POST" action="services.php" id="serviceForm">
         <?php if ($edit_data): ?>
             <input type="hidden" name="id" value="<?= $edit_data['id'] ?>">
         <?php endif; ?>
@@ -63,12 +65,16 @@ if (isset($_GET['edit'])) {
             <input type="text" name="price" value="<?= htmlspecialchars($edit_data['price'] ?? '') ?>" required placeholder="e.g. Rp 5.000.000 or 'Contact for Price'">
         </div>
         <div class="form-group">
-            <label>Description (Supports HTML tags like &lt;b&gt;, &lt;ul&gt;, &lt;li&gt;)</label>
-            <textarea name="description" rows="6" required><?= htmlspecialchars($edit_data['description'] ?? '') ?></textarea>
+            <label>Description (Rich Text)</label>
+            <!-- Hidden input to store Quill content -->
+            <input type="hidden" name="description" id="descriptionInput">
+            <div id="editor-container" style="height: 200px; background: #fff;">
+                <?= $edit_data['description'] ?? '' ?>
+            </div>
         </div>
         <div class="form-group">
             <label>Order Number</label>
-            <input type="number" name="order_num" value="<?= $edit_data['order_num'] ?? 0 ?>" required class="form-group" style="padding:10px; width:100px;">
+            <input type="number" name="order_num" value="<?= $edit_data['order_num'] ?? 0 ?>" required style="padding:10px; width:100px;">
         </div>
         <button type="submit" class="btn"><?= $edit_data ? 'Update' : 'Add' ?></button>
         <?php if ($edit_data): ?>
@@ -99,5 +105,27 @@ if (isset($_GET['edit'])) {
         <?php endwhile; ?>
     </table>
 </div>
+
+<!-- Quill Editor JS -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+    var quill = new Quill('#editor-container', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                ['bold', 'italic', 'underline'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['clean']
+            ]
+        }
+    });
+
+    // On form submit, sync quill content to hidden input
+    var form = document.getElementById('serviceForm');
+    form.onsubmit = function() {
+        var description = document.querySelector('input[name=description]');
+        description.value = quill.root.innerHTML;
+    };
+</script>
 
 <?php require_once 'includes/footer.php'; ?>
