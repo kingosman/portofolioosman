@@ -15,18 +15,19 @@ if (isset($_GET['delete'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
+    $category = $_POST['category'] ?? 'certification';
     $link_path = $_POST['link_path'] ?? ''; // Now using as link (Drive etc)
     $order_num = (int)$_POST['order_num'] ?? 0;
 
     if (isset($_POST['id']) && $_POST['id'] !== '') {
         $id = (int)$_POST['id'];
-        $stmt = $conn->prepare("UPDATE certifications SET title=?, description=?, image_path=?, order_num=? WHERE id=?");
-        $stmt->bind_param("sssii", $title, $description, $link_path, $order_num, $id);
+        $stmt = $conn->prepare("UPDATE certifications SET title=?, description=?, image_path=?, category=?, order_num=? WHERE id=?");
+        $stmt->bind_param("ssssii", $title, $description, $link_path, $category, $order_num, $id);
         $stmt->execute();
         $success = "Updated successfully.";
     } else {
-        $stmt = $conn->prepare("INSERT INTO certifications (title, description, image_path, order_num) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("sssi", $title, $description, $link_path, $order_num);
+        $stmt = $conn->prepare("INSERT INTO certifications (title, description, image_path, category, order_num) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssi", $title, $description, $link_path, $category, $order_num);
         $stmt->execute();
         $success = "Added successfully.";
     }
@@ -53,6 +54,14 @@ if (isset($_GET['edit'])) {
         <?php if ($edit_data): ?>
             <input type="hidden" name="id" value="<?= $edit_data['id'] ?>">
         <?php endif; ?>
+        
+        <div class="form-group">
+            <label>Category</label>
+            <select name="category">
+                <option value="certification" <?= ($edit_data['category'] ?? '') === 'certification' ? 'selected' : '' ?>>Certification</option>
+                <option value="achievement" <?= ($edit_data['category'] ?? '') === 'achievement' ? 'selected' : '' ?>>Achievement</option>
+            </select>
+        </div>
         
         <div class="form-group">
             <label>Title</label>
@@ -85,6 +94,7 @@ if (isset($_GET['edit'])) {
     <h3>Data List</h3>
     <table>
         <tr>
+            <th>Category</th>
             <th>Title</th>
             <th>Link</th>
             <th>Order</th>
@@ -92,6 +102,7 @@ if (isset($_GET['edit'])) {
         </tr>
         <?php while ($row = $certs->fetch_assoc()): ?>
         <tr>
+            <td><?= ucfirst($row['category']) ?></td>
             <td><?= htmlspecialchars($row['title']) ?></td>
             <td><a href="<?= htmlspecialchars($row['image_path']) ?>" target="_blank" style="color:blue; text-decoration:underline;">View Link</a></td>
             <td><?= $row['order_num'] ?></td>

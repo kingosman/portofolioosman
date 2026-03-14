@@ -27,6 +27,9 @@ $skillList = ['digital_marketing'=>[], 'business_mentor'=>[], 'website_developme
 while($row = $skills->fetch_assoc()) $skillList[$row['category']][] = $row;
 
 $certs = $conn->query("SELECT * FROM certifications ORDER BY order_num ASC");
+$certList = ['certification'=>[], 'achievement'=>[]];
+while($row = $certs->fetch_assoc()) $certList[$row['category']][] = $row;
+
 $services = $conn->query("SELECT * FROM services ORDER BY order_num ASC");
 
 $activities = $conn->query("SELECT * FROM activities ORDER BY order_num ASC");
@@ -446,17 +449,29 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             <h2>Certifications & Achievements</h2>
             <p class="text-muted">Academic credentials and professional recognitions.</p>
         </div>
-        <div class="grid-3 fade-in-up">
-            <?php if ($certs->num_rows > 0): while($c = $certs->fetch_assoc()): ?>
-                <div class="clean-card">
-                    <span class="badge">Achievement</span>
-                    <h3><?= htmlspecialchars($c['title']) ?></h3>
-                    <p style="font-size: 0.95rem; margin-bottom: 20px;"><?= htmlspecialchars($c['description']) ?></p>
-                    <a href="<?= htmlspecialchars($c['image_path']) ?>" target="_blank" class="btn btn-outline" style="border-radius:12px; font-size: 0.85rem; padding: 10px 20px;">View Credential &rarr;</a>
-                </div>
-            <?php endwhile; else: ?>
-                <p style="color:var(--text-muted); width: 100%; text-align:center;">No certifications added yet.</p>
-            <?php endif; ?>
+        <div class="fade-in-up">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="switchTab(this, 'cert', 'certification')">Certifications</button>
+                <button class="tab-btn" onclick="switchTab(this, 'cert', 'achievement')">Achievements</button>
+            </div>
+            <div class="cert-contents">
+                <?php foreach(['certification', 'achievement'] as $idx => $cat): ?>
+                    <div id="cert-<?= $cat ?>" class="tab-content <?= $idx === 0 ? 'active' : '' ?>">
+                        <div class="grid-3">
+                        <?php if(empty($certList[$cat])): ?>
+                            <p style="color:var(--text-muted); width: 100%; text-align:center;">No <?= $cat ?>s added yet.</p>
+                        <?php else: foreach($certList[$cat] as $c): ?>
+                            <div class="clean-card">
+                                <span class="badge"><?= ucfirst($cat) ?></span>
+                                <h3><?= htmlspecialchars($c['title']) ?></h3>
+                                <p style="font-size: 0.95rem; margin-bottom: 20px;"><?= htmlspecialchars($c['description']) ?></p>
+                                <a href="<?= htmlspecialchars($c['image_path']) ?>" target="_blank" class="btn btn-outline" style="border-radius:12px; font-size: 0.85rem; padding: 10px 20px;">View Credential &rarr;</a>
+                            </div>
+                        <?php endforeach; endif; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
         </div>
     </div>
 </section>
