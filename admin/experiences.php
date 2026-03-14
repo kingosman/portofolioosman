@@ -72,6 +72,10 @@ if (isset($_GET['edit'])) {
             </select>
         </div>
         <div class="form-group">
+            <label>Date Range (e.g., 'Jan 2020 - Present')</label>
+            <input type="text" name="date_range" value="<?= htmlspecialchars($edit_data['date_range'] ?? '') ?>">
+        </div>
+        <div class="form-group">
             <label>Link (Highly recommended for Written Works)</label>
             <input type="text" name="link" value="<?= htmlspecialchars($edit_data['link'] ?? '') ?>" placeholder="https://...">
         </div>
