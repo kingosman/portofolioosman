@@ -504,13 +504,11 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             <div class="price-card">
                 <div class="price-title"><?= htmlspecialchars($srv['name']) ?></div>
                 <div class="price-amount"><?= htmlspecialchars($srv['price']) ?></div>
-                <div class="price-desc"><?= nl2br(htmlspecialchars($srv['description'])) ?></div>
-                <?php if(!empty($srv['terms'])): ?>
-                    <div class="price-terms"><strong>Note/Terms:</strong> <?= nl2br(htmlspecialchars($srv['terms'])) ?></div>
-                <?php endif; ?>
-                <div style="display:flex; flex-direction:column; gap:10px;">
-                    <a href="https://wa.me/<?= htmlspecialchars($wa) ?>?text=Hello, I am interested in the <?= urlencode($srv['name']) ?> service." target="_blank" class="btn btn-primary" style="width:100%; border-radius:12px;">Order Now</a>
-                    <a href="https://wa.me/<?= htmlspecialchars($wa) ?>?text=Hello Osman, I want to discuss a potential collaboration." target="_blank" class="btn btn-outline" style="width:100%; border-radius:12px;">Collaborate Now</a>
+                <div class="price-desc" style="text-align: left;">
+                    <?= nl2br($srv['description']) ?>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:10px; margin-top: auto;">
+                    <a href="https://wa.me/<?= htmlspecialchars($wa) ?>?text=Hello Osman, I want to discuss a potential collaboration for the <?= urlencode($srv['name']) ?> service." target="_blank" class="btn btn-primary" style="width:100%; border-radius:12px; background-color: #5d0001;">Collaborate Now</a>
                 </div>
             </div>
             <?php endwhile; else: ?>

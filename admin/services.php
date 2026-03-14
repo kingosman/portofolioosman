@@ -21,13 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['id']) && $_POST['id'] !== '') {
         $id = (int)$_POST['id'];
-        $stmt = $conn->prepare("UPDATE services SET name=?, price=?, description=?, terms=?, order_num=? WHERE id=?");
-        $stmt->bind_param("ssssii", $name, $price, $description, $terms, $order_num, $id);
+        $stmt = $conn->prepare("UPDATE services SET name=?, price=?, description=?, order_num=? WHERE id=?");
+        $stmt->bind_param("sssi i", $name, $price, $description, $order_num, $id);
         $stmt->execute();
         $success = "Updated successfully.";
     } else {
-        $stmt = $conn->prepare("INSERT INTO services (name, price, description, terms, order_num) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssi", $name, $price, $description, $terms, $order_num);
+        $stmt = $conn->prepare("INSERT INTO services (name, price, description, order_num) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("sssi", $name, $price, $description, $order_num);
         $stmt->execute();
         $success = "Added successfully.";
     }
@@ -63,12 +63,8 @@ if (isset($_GET['edit'])) {
             <input type="text" name="price" value="<?= htmlspecialchars($edit_data['price'] ?? '') ?>" required placeholder="e.g. Rp 5.000.000 or 'Contact for Price'">
         </div>
         <div class="form-group">
-            <label>Description</label>
-            <textarea name="description" rows="3" required><?= htmlspecialchars($edit_data['description'] ?? '') ?></textarea>
-        </div>
-        <div class="form-group">
-            <label>Terms & Conditions (Optional)</label>
-            <textarea name="terms" rows="3"><?= htmlspecialchars($edit_data['terms'] ?? '') ?></textarea>
+            <label>Description (Supports HTML tags like &lt;b&gt;, &lt;ul&gt;, &lt;li&gt;)</label>
+            <textarea name="description" rows="6" required><?= htmlspecialchars($edit_data['description'] ?? '') ?></textarea>
         </div>
         <div class="form-group">
             <label>Order Number</label>
