@@ -103,11 +103,18 @@ while($row = $activities->fetch_assoc()) {
         .hero-image img:hover { transform: translateY(-10px); }
 
         /* Stats & Facts */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 30px; text-align: center; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; text-align: center; }
         .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 30px 20px; transition: var(--transition); }
         .stat-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(93,0,1,0.06); }
         .stat-number { font-size: 2.5rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; line-height: 1; }
         .stat-label { font-size: 0.95rem; font-weight: 600; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+        }
 
         /* Activity Sliders & Logos */
         .swiper-activities { width: 100%; padding: 20px 0 50px; }
