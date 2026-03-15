@@ -6,6 +6,7 @@ This document summarizes the changes and features added to the Osman Nur Chaidir
 - [DONE] Add social media section in footer (CMS managed).
 - [DONE] Enhance Technical Skills: added descriptions and mockup slider modal for Web Development.
 - [DONE] Update CMS to support new fields (description, multiple screenshots, social links).
+- [DONE] Mobile-Friendly Enhancements: Implemented hamburger menu and responsive layout adjustments.
 
 ## 📅 Previous Updates (March 14, 2026)
 1.  **Data & Facts Section**: Added a section to display key professional milestones.
