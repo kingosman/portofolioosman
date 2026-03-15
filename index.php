@@ -156,7 +156,28 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             transform: translateY(-2px);
         }
 
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        .menu-toggle span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: var(--text-main);
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
         .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        
+        @media (max-width: 480px) {
+            .container { padding: 0 16px; }
+        }
+        
         img { max-width: 100%; height: auto; display: block; }
         
         .fade-in-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
@@ -219,7 +240,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
         .swiper-logos img { max-height: 100%; max-width: 100%; object-fit: contain; }
 
         /* Cards/Grid System */
-        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
         .clean-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 32px; transition: var(--transition); display: flex; flex-direction: column; overflow: hidden; position: relative; }
         .clean-card:hover { border-color: rgba(93, 0, 1, 0.3); box-shadow: 0 20px 40px rgba(15, 23, 42, 0.05); transform: translateY(-5px); z-index: 2; }
         .clean-card .badge { font-size: 0.75rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: inline-block; background: var(--primary-light); padding: 4px 12px; border-radius: 20px;}
@@ -304,6 +325,37 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             .cta-section { padding: 60px 24px; margin: 0 16px 80px; }
             .cta-content h2 { font-size: 2rem; }
             .cta-btns { flex-direction: column; }
+            
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 100%;
+                height: 100vh;
+                background: #fff;
+                flex-direction: column;
+                justify-content: center;
+                gap: 24px;
+                padding: 40px;
+                transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+                z-index: 1000;
+            }
+            .nav-links.active { right: 0; }
+            .nav-links a { font-size: 1.1rem; }
+            .nav-btn { width: 100%; text-align: center; }
+            
+            /* Hamburger animation */
+            .menu-toggle.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .menu-toggle.active span:nth-child(2) { opacity: 0; }
+            .menu-toggle.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        }
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1rem; }
+            .section-header h2 { font-size: 1.75rem; }
+            .stat-number { font-size: 2rem; }
+            .cta-content h2 { font-size: 1.75rem; }
         }
 
         /* Modal Styles */
@@ -388,6 +440,11 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
 <nav class="top-nav">
     <div class="container nav-container">
         <a href="#" class="nav-logo">Osman Nur Chaidir</a>
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
         <div class="nav-links">
             <a href="#facts">About</a>
             <a href="#experience">Exps</a>
@@ -920,6 +977,26 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             });
         }, { threshold: 0.15 });
         document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+
+        // Mobile Menu Logic
+        const menuToggle = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                menuToggle.classList.toggle('active');
+                navLinks.classList.toggle('active');
+                document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : 'auto';
+            });
+        }
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        });
     });
 
     let modalSwiper;
