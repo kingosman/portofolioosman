@@ -100,6 +100,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $page === 'settings') {
                 <input type="text" name="settings[fact_pembicara]" value="<?= htmlspecialchars(getSetting($conn, 'fact_pembicara')) ?>" placeholder="e.g., 100+">
             </div>
 
+            <hr style="margin:30px 0; border:1px solid #eee;">
+            <h3>Downloads & Social Media</h3>
+            <div class="form-group">
+                <label>CV Download Link</label>
+                <input type="text" name="settings[cv_link]" value="<?= htmlspecialchars(getSetting($conn, 'cv_link')) ?>" placeholder="URL to your CV">
+            </div>
+            <div class="form-group">
+                <label>Portfolio Download Link</label>
+                <input type="text" name="settings[portfolio_link]" value="<?= htmlspecialchars(getSetting($conn, 'portfolio_link')) ?>" placeholder="URL to your Portfolio">
+            </div>
+            <br>
+            <div class="form-group">
+                <label>Instagram URL</label>
+                <input type="text" name="settings[social_instagram]" value="<?= htmlspecialchars(getSetting($conn, 'social_instagram')) ?>" placeholder="https://instagram.com/...">
+            </div>
+            <div class="form-group">
+                <label>LinkedIn URL</label>
+                <input type="text" name="settings[social_linkedin]" value="<?= htmlspecialchars(getSetting($conn, 'social_linkedin')) ?>" placeholder="https://linkedin.com/in/...">
+            </div>
+            <div class="form-group">
+                <label>Facebook URL</label>
+                <input type="text" name="settings[social_facebook]" value="<?= htmlspecialchars(getSetting($conn, 'social_facebook')) ?>" placeholder="https://facebook.com/...">
+            </div>
+            <div class="form-group">
+                <label>TikTok URL</label>
+                <input type="text" name="settings[social_tiktok]" value="<?= htmlspecialchars(getSetting($conn, 'social_tiktok')) ?>" placeholder="https://tiktok.com/@...">
+            </div>
+            <div class="form-group">
+                <label>YouTube URL</label>
+                <input type="text" name="settings[social_youtube]" value="<?= htmlspecialchars(getSetting($conn, 'social_youtube')) ?>" placeholder="https://youtube.com/...">
+            </div>
+
             <button type="submit" class="btn">Save Settings</button>
         </form>
     </div>

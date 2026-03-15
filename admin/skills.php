@@ -27,6 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $portfolio_link = $_POST['portfolio_link'] ?? '';
     $order_num = (int)$_POST['order_num'] ?? 0;
     $thumbnail = $_POST['existing_thumbnail'] ?? '';
+    $description = $_POST['description'] ?? '';
+    $screenshots = $_POST['existing_screenshots'] ?? '[]';
+    $decoded_screenshots = json_decode($screenshots, true) ?: [];
 
     if (isset($_FILES['thumbnail']) && $_FILES['thumbnail']['error'] === UPLOAD_ERR_OK) {
         $tmpName = $_FILES['thumbnail']['tmp_name'];
@@ -38,15 +41,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    if (isset($_FILES['screenshots']) && !empty($_FILES['screenshots']['name'][0])) {
+        foreach ($_FILES['screenshots']['name'] as $key => $name_file) {
+            if ($_FILES['screenshots']['error'][$key] === UPLOAD_ERR_OK) {
+                $tmpName = $_FILES['screenshots']['tmp_name'][$key];
+                $fileName = 'skill_shot_' . time() . '_' . $key . '_' . basename($name_file);
+                $targetFile = $uploadDir . $fileName;
+                if (move_uploaded_file($tmpName, $targetFile)) {
+                    $decoded_screenshots[] = 'assets/images/' . $fileName;
+                }
+            }
+        }
+        $screenshots = json_encode($decoded_screenshots);
+    }
+
     if (isset($_POST['id']) && $_POST['id'] !== '') {
         $id = (int)$_POST['id'];
-        $stmt = $conn->prepare("UPDATE skills SET name=?, category=?, portfolio_link=?, thumbnail=?, order_num=? WHERE id=?");
-        $stmt->bind_param("ssssii", $name, $category, $portfolio_link, $thumbnail, $order_num, $id);
+        $stmt = $conn->prepare("UPDATE skills SET name=?, category=?, portfolio_link=?, thumbnail=?, description=?, screenshots=?, order_num=? WHERE id=?");
+        $stmt->bind_param("ssssssii", $name, $category, $portfolio_link, $thumbnail, $description, $screenshots, $order_num, $id);
         $stmt->execute();
         $success = "Updated successfully.";
     } else {
-        $stmt = $conn->prepare("INSERT INTO skills (name, category, portfolio_link, thumbnail, order_num) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssi", $name, $category, $portfolio_link, $thumbnail, $order_num);
+        $stmt = $conn->prepare("INSERT INTO skills (name, category, portfolio_link, thumbnail, description, screenshots, order_num) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssi", $name, $category, $portfolio_link, $thumbnail, $description, $screenshots, $order_num);
         $stmt->execute();
         $success = "Added successfully.";
     }
@@ -96,7 +113,26 @@ if (isset($_GET['edit'])) {
             <input type="file" name="thumbnail" accept="image/*">
         </div>
         <div class="form-group">
-            <label>Portfolio/Proof Link (Optional)</label>
+            <label>Description (Supports HTML for bold, etc.)</label>
+            <textarea name="description" rows="5"><?= htmlspecialchars($edit_data['description'] ?? '') ?></textarea>
+        </div>
+        <div class="form-group">
+            <label>Portfolio Screenshots (For Web Dev Popup Slider)</label>
+            <?php if ($edit_data && !empty($edit_data['screenshots'])): 
+                $shots = json_decode($edit_data['screenshots'], true);
+                if ($shots): ?>
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+                    <?php foreach($shots as $s): ?>
+                        <img src="../<?= $s ?>" height="60" style="border:1px solid #ddd; padding:2px;">
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; endif; ?>
+            <input type="hidden" name="existing_screenshots" value="<?= htmlspecialchars($edit_data['screenshots'] ?? '[]') ?>">
+            <input type="file" name="screenshots[]" accept="image/*" multiple>
+            <small style="color:#666;">You can select multiple images.</small>
+        </div>
+        <div class="form-group">
+            <label>Portfolio/Project Link (Button in popup for Web Dev)</label>
             <input type="text" name="portfolio_link" value="<?= htmlspecialchars($edit_data['portfolio_link'] ?? '') ?>">
         </div>
         <div class="form-group">

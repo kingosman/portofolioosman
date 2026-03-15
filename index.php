@@ -15,6 +15,16 @@ $fact_audiens = getSetting($conn, 'fact_audiens');
 $fact_prestasi = getSetting($conn, 'fact_prestasi');
 $fact_pembicara = getSetting($conn, 'fact_pembicara');
 
+$cv_link = getSetting($conn, 'cv_link') ?: '#';
+$portfolio_link = getSetting($conn, 'portfolio_link') ?: '#';
+$socials = [
+    'instagram' => getSetting($conn, 'social_instagram'),
+    'linkedin' => getSetting($conn, 'social_linkedin'),
+    'facebook' => getSetting($conn, 'social_facebook'),
+    'tiktok' => getSetting($conn, 'social_tiktok'),
+    'youtube' => getSetting($conn, 'social_youtube')
+];
+
 // Fetch Data
 $orgs = $conn->query("SELECT * FROM organizations ORDER BY order_num ASC");
 
@@ -94,6 +104,58 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
         body { background-color: var(--bg); color: var(--text-body); line-height: 1.6; overflow-x: hidden; }
+        
+        /* Top Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition);
+        }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo {
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        .nav-btn {
+            background: var(--primary);
+            color: #fff !important;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem !important;
+        }
+        .nav-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
         .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
         img { max-width: 100%; height: auto; display: block; }
         
@@ -243,9 +305,103 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             .cta-content h2 { font-size: 2rem; }
             .cta-btns { flex-direction: column; }
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
+            padding-top: 60px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal.show { display: block; opacity: 1; }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 0;
+            border: none;
+            width: 90%;
+            max-width: 900px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            position: relative;
+        }
+        .modal-header {
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+        .modal-header h2 { font-size: 1.5rem; color: var(--text-main); }
+        .close-modal {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .close-modal:hover { color: var(--primary); }
+        .modal-body { padding: 32px; }
+        .modal-slider { width: 100%; height: auto; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 24px; }
+        .modal-slider .swiper-slide img { width:100%; height:auto; border-radius:12px; }
+        .modal-footer {
+            padding: 24px 32px;
+            background: #f8fafc;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Social Icons */
+        .social-links { display: flex; justify-content: center; gap: 16px; margin-top: 20px; }
+        .social-link {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        .social-link:hover {
+            color: #fff;
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
     </style>
 </head>
 <body>
+
+<nav class="top-nav">
+    <div class="container nav-container">
+        <a href="#" class="nav-logo">Osman Nur Chaidir</a>
+        <div class="nav-links">
+            <a href="#facts">About</a>
+            <a href="#experience">Exps</a>
+            <a href="#skills">Skills</a>
+            <a href="#services">Services</a>
+            <?php if($cv_link !== '#'): ?>
+                <a href="<?= htmlspecialchars($cv_link) ?>" target="_blank" class="nav-btn">Download CV</a>
+            <?php endif; ?>
+            <?php if($portfolio_link !== '#'): ?>
+                <a href="<?= htmlspecialchars($portfolio_link) ?>" target="_blank" class="nav-btn" style="background:var(--text-main);">Portfolio</a>
+            <?php endif; ?>
+        </div>
+    </div>
+</nav>
 
 <!-- HERO -->
 <section class="hero">
@@ -457,9 +613,17 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
                                         <img src="<?= htmlspecialchars($s['thumbnail']) ?>" alt="<?= htmlspecialchars($s['name']) ?>">
                                     </div>
                                 <?php endif; ?>
-                                <h3 style="margin-bottom:0; font-size:1.15rem;"><?= htmlspecialchars($s['name']) ?></h3>
-                                <?php if(!empty($s['portfolio_link'])): ?>
-                                    <a href="<?= htmlspecialchars($s['portfolio_link']) ?>" target="_blank" style="margin-top:10px;display:inline-block;color:var(--primary);font-size:0.9em;font-weight:600;text-decoration:none;">View Project &rarr;</a>
+                                <h3 style="margin-bottom:8px; font-size:1.15rem;"><?= htmlspecialchars($s['name']) ?></h3>
+                                <?php if(!empty($s['description'])): ?>
+                                    <div style="font-size:0.9rem; color:var(--text-body); margin-bottom:12px;">
+                                        <?= $s['description'] ?>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <?php if($cat === 'website_development' && !empty($s['screenshots']) && $s['screenshots'] !== '[]'): ?>
+                                    <button class="btn btn-primary btn-sm" style="padding: 8px 16px; font-size: 0.85rem; border-radius: 8px;" onclick="openSkillModal(<?= htmlspecialchars(json_encode($s)) ?>)">View Mockups</button>
+                                <?php elseif(!empty($s['portfolio_link'])): ?>
+                                    <a href="<?= htmlspecialchars($s['portfolio_link']) ?>" target="_blank" style="display:inline-block;color:var(--primary);font-size:0.9em;font-weight:600;text-decoration:none;">View Case &rarr;</a>
                                 <?php endif; ?>
                             </div>
                         <?php endforeach; endif; ?>
@@ -623,12 +787,51 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
 
 <footer>
     <div class="container">
+        <div class="social-links" style="margin-bottom: 30px;">
+            <?php foreach($socials as $name => $url): if(!empty($url)): ?>
+                <a href="<?= htmlspecialchars($url) ?>" target="_blank" class="social-link" title="<?= ucfirst($name) ?>">
+                    <!-- Simple SVG icons for social media -->
+                    <?php if($name == 'instagram'): ?>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    <?php elseif($name == 'linkedin'): ?>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    <?php elseif($name == 'facebook'): ?>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                    <?php elseif($name == 'tiktok'): ?>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+                    <?php elseif($name == 'youtube'): ?>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.42a2.78 2.78 0 0 0-1.94 2C1 8.12 1 12 1 12s0 3.88.42 5.58a2.78 2.78 0 0 0 1.94 2c1.72.42 8.6.42 8.6.42s6.88 0 8.6-.42a2.78 2.78 0 0 0 1.94-2C23 15.88 23 12 23 12s0-3.88-.42-5.58z"></path><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"></polygon></svg>
+                    <?php endif; ?>
+                </a>
+            <?php endif; endforeach; ?>
+        </div>
         <p>&copy; <?= date('Y') ?> Osman Nur Chaidir. Crafted with excellence.</p>
     </div>
 </footer>
 
+<!-- Portfolio Skill Modal -->
+<div id="skillModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">Project Details</h2>
+            <span class="close-modal" onclick="closeSkillModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div id="modalDesc" style="margin-bottom: 24px; color: var(--text-body);"></div>
+            <div class="swiper modal-slider">
+                <div class="swiper-wrapper" id="modalSliderWrapper">
+                    <!-- Slides loaded via JS -->
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" id="modalLink" target="_blank" class="btn btn-primary">Visit Website / App</a>
+        </div>
+    </div>
+</div>
+
 <!-- Swiper JS -->
-<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 
 <script>
@@ -718,6 +921,57 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
         }, { threshold: 0.15 });
         document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
     });
+
+    let modalSwiper;
+    function openSkillModal(skill) {
+        document.getElementById('modalTitle').innerText = skill.name;
+        document.getElementById('modalDesc').innerHTML = skill.description || '';
+        
+        const wrapper = document.getElementById('modalSliderWrapper');
+        wrapper.innerHTML = '';
+        const shots = JSON.parse(skill.screenshots || '[]');
+        
+        shots.forEach(shot => {
+            const slide = document.createElement('div');
+            slide.className = 'swiper-slide';
+            slide.innerHTML = `<img src="${shot}" alt="Mockup">`;
+            wrapper.appendChild(slide);
+        });
+
+        const linkBtn = document.getElementById('modalLink');
+        if (skill.portfolio_link) {
+            linkBtn.href = skill.portfolio_link;
+            linkBtn.style.display = 'inline-flex';
+        } else {
+            linkBtn.style.display = 'none';
+        }
+
+        const modal = document.getElementById('skillModal');
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+
+        if (modalSwiper) modalSwiper.destroy();
+        modalSwiper = new Swiper('.modal-slider', {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            pagination: { el: ".swiper-pagination", clickable: true },
+            loop: shots.length > 1,
+            autoplay: { delay: 3000, disableOnInteraction: false }
+        });
+    }
+
+    function closeSkillModal() {
+        const modal = document.getElementById('skillModal');
+        modal.classList.remove('show');
+        document.body.style.overflow = 'auto';
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('skillModal');
+        if (event.target == modal) {
+            closeSkillModal();
+        }
+    }
 </script>
 </body>
 </html>
