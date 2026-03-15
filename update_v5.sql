@@ -10,3 +10,4 @@ INSERT IGNORE INTO settings (key_name, value) VALUES
 
 ALTER TABLE skills ADD COLUMN description TEXT DEFAULT NULL;
 ALTER TABLE skills ADD COLUMN screenshots TEXT DEFAULT NULL;
+ALTER TABLE skills MODIFY COLUMN category ENUM('digital_marketing','business_mentor','website_development','sociology','others') NOT NULL;

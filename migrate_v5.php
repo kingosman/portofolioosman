@@ -26,6 +26,9 @@ $columns = [
     "screenshots" => "TEXT DEFAULT NULL"
 ];
 
+// Update category enum
+$conn->query("ALTER TABLE skills MODIFY COLUMN category ENUM('digital_marketing','business_mentor','website_development','sociology','others') NOT NULL");
+
 foreach ($columns as $col => $type) {
     $check = $conn->query("SHOW COLUMNS FROM skills LIKE '$col'");
     if ($check->num_rows == 0) {
