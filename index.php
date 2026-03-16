@@ -262,6 +262,27 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
         .tab-content { display: none; opacity: 0; transform: translateY(10px); transition: all 0.4s ease; }
         .tab-content.active { display: block; opacity: 1; transform: translateY(0); }
 
+        /* Mobile Accordion */
+        .skills-accordion { display: none; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .accordion-item { border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); overflow: hidden; transition: var(--transition); }
+        .accordion-item:hover { border-color: var(--primary); }
+        .accordion-header { padding: 20px 24px; font-weight: 700; color: var(--text-main); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: var(--transition); background: var(--surface); }
+        .accordion-header:hover { color: var(--primary); }
+        .accordion-header.active { background: var(--primary-light); color: var(--primary); border-bottom: 1px solid var(--border); }
+        .accordion-header .icon { font-size: 0.8rem; transition: transform 0.3s ease; }
+        .accordion-header.active .icon { transform: rotate(180deg); }
+        .accordion-content { display: none; padding: 20px; background: #fff; }
+        .accordion-content.open { display: block; animation: slideDown 0.4s ease-out; }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Visibility utilities */
+        .desktop-only { display: block; }
+        .mobile-only { display: none; }
+
         /* Timeline */
         .timeline { display: flex; flex-direction: column; gap: 24px; }
         .timeline-item { display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 32px; transition: var(--transition); }
@@ -318,6 +339,10 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             .timeline-item { flex-direction: column; padding: 24px; }
             .timeline-date { margin-bottom: 16px; padding-right: 0; }
             .timeline-content { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 16px; }
+            
+            /* Unified Card Padding for Tablet */
+            .clean-card, .price-card, .testi-card, .org-content, .news-content { padding: 24px !important; }
+            .grid-3 { gap: 20px; grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 768px) {
             .section-header h2 { font-size: 2rem; }
@@ -326,6 +351,10 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             .cta-content h2 { font-size: 2rem; }
             .cta-btns { flex-direction: column; }
             
+            .desktop-only { display: none; }
+            .mobile-only { display: block; }
+            .grid-3 { grid-template-columns: 1fr; gap: 16px; }
+
             .menu-toggle { display: flex; }
             .nav-links {
                 position: fixed;
@@ -356,6 +385,9 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             .section-header h2 { font-size: 1.75rem; }
             .stat-number { font-size: 2rem; }
             .cta-content h2 { font-size: 1.75rem; }
+            
+            /* Unified Card Padding for Phone */
+            .clean-card, .price-card, .testi-card, .org-content, .news-content { padding: 20px !important; }
         }
 
         /* Modal Styles */
@@ -650,43 +682,95 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             <h2>Technical Skills</h2>
         </div>
         <div class="fade-in-up">
-            <div class="tabs-header">
-                <button class="tab-btn active" onclick="switchTab(this, 'skill', 'digital_marketing')">Digital Marketing</button>
-                <button class="tab-btn" onclick="switchTab(this, 'skill', 'business_mentor')">Business Mentor</button>
-                <button class="tab-btn" onclick="switchTab(this, 'skill', 'website_development')">Web Development</button>
-                <button class="tab-btn" onclick="switchTab(this, 'skill', 'sociology')">Sociology</button>
-                <button class="tab-btn" onclick="switchTab(this, 'skill', 'others')">Others</button>
-            </div>
-            <div class="skill-contents">
-                <?php foreach(['digital_marketing', 'business_mentor', 'website_development', 'sociology', 'others'] as $idx => $cat): ?>
-                    <div id="skill-<?= $cat ?>" class="tab-content <?= $idx === 0 ? 'active' : '' ?>">
-                        <div class="grid-3">
-                        <?php if(empty($skillList[$cat])): ?>
-                            <p style="color:var(--text-muted);">No entries available.</p>
-                        <?php else: foreach($skillList[$cat] as $s): ?>
-                            <div class="clean-card" style="padding: 24px;">
-                                <?php if(!empty($s['thumbnail'])): ?>
-                                    <div class="skill-thumb-box">
-                                        <img src="<?= htmlspecialchars($s['thumbnail']) ?>" alt="<?= htmlspecialchars($s['name']) ?>">
-                                    </div>
-                                <?php endif; ?>
-                                <h3 style="margin-bottom:8px; font-size:1.15rem;"><?= htmlspecialchars($s['name']) ?></h3>
-                                <?php if(!empty($s['description'])): ?>
-                                    <div style="font-size:0.9rem; color:var(--text-body); margin-bottom:12px;">
-                                        <?= $s['description'] ?>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if($cat === 'website_development' && !empty($s['screenshots']) && $s['screenshots'] !== '[]'): ?>
-                                    <button class="btn btn-primary btn-sm" style="padding: 8px 16px; font-size: 0.85rem; border-radius: 8px;" onclick="openSkillModal(<?= htmlspecialchars(json_encode($s)) ?>)">View Mockups</button>
-                                <?php elseif(!empty($s['portfolio_link'])): ?>
-                                    <a href="<?= htmlspecialchars($s['portfolio_link']) ?>" target="_blank" style="display:inline-block;color:var(--primary);font-size:0.9em;font-weight:600;text-decoration:none;">View Case &rarr;</a>
-                                <?php endif; ?>
+            <?php 
+            $skillCats = [
+                'digital_marketing' => 'Digital Marketing',
+                'business_mentor' => 'Business Mentor',
+                'website_development' => 'Web Development',
+                'sociology' => 'Sociology',
+                'others' => 'Others'
+            ];
+            ?>
+            
+            <!-- Desktop Tabs View -->
+            <div class="desktop-only">
+                <div class="tabs-header">
+                    <?php $first = true; foreach($skillCats as $slug => $label): ?>
+                        <button class="tab-btn <?= $first ? 'active' : '' ?>" onclick="switchTab(this, 'skill', '<?= $slug ?>')"><?= $label ?></button>
+                    <?php $first = false; endforeach; ?>
+                </div>
+                <div class="skill-contents">
+                    <?php $first = true; foreach($skillCats as $slug => $label): ?>
+                        <div id="skill-<?= $slug ?>" class="tab-content <?= $first ? 'active' : '' ?>">
+                            <div class="grid-3">
+                            <?php if(empty($skillList[$slug])): ?>
+                                <p style="color:var(--text-muted);">No entries available.</p>
+                            <?php else: foreach($skillList[$slug] as $s): ?>
+                                <div class="clean-card" style="padding: 24px;">
+                                    <?php if(!empty($s['thumbnail'])): ?>
+                                        <div class="skill-thumb-box">
+                                            <img src="<?= htmlspecialchars($s['thumbnail']) ?>" alt="<?= htmlspecialchars($s['name']) ?>">
+                                        </div>
+                                    <?php endif; ?>
+                                    <h3 style="margin-bottom:8px; font-size:1.15rem;"><?= htmlspecialchars($s['name']) ?></h3>
+                                    <?php if(!empty($s['description'])): ?>
+                                        <div style="font-size:0.9rem; color:var(--text-body); margin-bottom:12px;">
+                                            <?= $s['description'] ?>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if($slug === 'website_development' && !empty($s['screenshots']) && $s['screenshots'] !== '[]'): ?>
+                                        <button class="btn btn-primary btn-sm" style="padding: 8px 16px; font-size: 0.85rem; border-radius: 8px;" onclick="openSkillModal(<?= htmlspecialchars(json_encode($s)) ?>)">View Mockups</button>
+                                    <?php elseif(!empty($s['portfolio_link'])): ?>
+                                        <a href="<?= htmlspecialchars($s['portfolio_link']) ?>" target="_blank" style="display:inline-block;color:var(--primary);font-size:0.9em;font-weight:600;text-decoration:none;">View Case &rarr;</a>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; endif; ?>
                             </div>
-                        <?php endforeach; endif; ?>
+                        </div>
+                    <?php $first = false; endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Mobile Accordion View -->
+            <div class="mobile-only">
+                <div class="skills-accordion">
+                    <?php foreach($skillCats as $slug => $label): ?>
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span><?= $label ?></span>
+                            <span class="icon">▼</span>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="grid-3">
+                            <?php if(empty($skillList[$slug])): ?>
+                                <p style="color:var(--text-muted);">No entries available.</p>
+                            <?php else: foreach($skillList[$slug] as $s): ?>
+                                <div class="clean-card">
+                                    <?php if(!empty($s['thumbnail'])): ?>
+                                        <div class="skill-thumb-box" style="margin-bottom: 12px; height: 40px; width: 40px;">
+                                            <img src="<?= htmlspecialchars($s['thumbnail']) ?>" alt="<?= htmlspecialchars($s['name']) ?>" style="width: 24px; height: 24px;">
+                                        </div>
+                                    <?php endif; ?>
+                                    <h3 style="margin-bottom:8px; font-size:1.1rem;"><?= htmlspecialchars($s['name']) ?></h3>
+                                    <?php if(!empty($s['description'])): ?>
+                                        <div style="font-size:0.85rem; color:var(--text-body); margin-bottom:12px; line-height:1.5;">
+                                            <?= $s['description'] ?>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if($slug === 'website_development' && !empty($s['screenshots']) && $s['screenshots'] !== '[]'): ?>
+                                        <button class="btn btn-primary btn-sm" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; width: 100%;" onclick="openSkillModal(<?= htmlspecialchars(json_encode($s)) ?>)">View Mockups</button>
+                                    <?php elseif(!empty($s['portfolio_link'])): ?>
+                                        <a href="<?= htmlspecialchars($s['portfolio_link']) ?>" target="_blank" style="display:block; text-align:center; color:var(--primary); font-size:0.85em; font-weight:600; text-decoration:none; padding: 8px; border: 1px solid var(--primary-light); border-radius: 8px; background: var(--primary-light);">View Case &rarr;</a>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; endif; ?>
+                            </div>
                         </div>
                     </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
     </div>
@@ -914,6 +998,24 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             targetElement.style.opacity = '1';
             targetElement.style.transform = 'translateY(0)';
         }, 350);
+    }
+
+    function toggleAccordion(header) {
+        const item = header.parentElement;
+        const content = header.nextElementSibling;
+        const isActive = header.classList.contains('active');
+        
+        // Use a more specific selector to avoid closing other accordions if any
+        const accordion = item.parentElement;
+        accordion.querySelectorAll('.accordion-header').forEach(h => {
+            h.classList.remove('active');
+            h.nextElementSibling.classList.remove('open');
+        });
+        
+        if (!isActive) {
+            header.classList.add('active');
+            content.classList.add('open');
+        }
     }
 
     // Swiper Initializations
