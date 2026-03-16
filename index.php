@@ -263,7 +263,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
         .tab-content.active { display: block; opacity: 1; transform: translateY(0); }
 
         /* Mobile Accordion */
-        .skills-accordion { display: none; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .skills-accordion { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
         .accordion-item { border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); overflow: hidden; transition: var(--transition); }
         .accordion-item:hover { border-color: var(--primary); }
         .accordion-header { padding: 20px 24px; font-weight: 700; color: var(--text-main); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: var(--transition); background: var(--surface); }
