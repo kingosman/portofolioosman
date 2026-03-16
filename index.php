@@ -336,8 +336,9 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             .hero-container { flex-direction: column-reverse; text-align: center; }
             .hero h1 { font-size: 3rem; }
             .hero-image { justify-content: center; }
+            .hero-btns { justify-content: center !important; }
             .timeline-item { flex-direction: column; padding: 24px; }
-            .timeline-date { margin-bottom: 16px; padding-right: 0; }
+            .timeline-date { flex: none !important; margin-bottom: 8px; padding-right: 0; }
             .timeline-content { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 16px; }
             
             /* Unified Card Padding for Tablet */
@@ -363,10 +364,12 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             .timeline-content h4 { font-size: 1.15rem !important; }
             
             /* Fix Price Card estética on Mobile */
-            .price-card { padding: 32px 24px !important; text-align: left; }
-            .price-title { font-size: 1.25rem; font-weight: 800; }
-            .price-amount { font-size: 1.8rem; margin-bottom: 20px; }
-            .price-desc { font-size: 0.95rem; }
+            .price-card { padding: 40px 32px !important; text-align: left; }
+            .price-title { font-size: 1.3rem; margin-bottom: 12px; }
+            .price-amount { font-size: 1.8rem; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+            .price-desc { font-size: 0.95rem; line-height: 1.7; }
+            .price-desc ul, .price-desc ol { padding-left: 20px; }
+            .price-desc li { margin-bottom: 10px; }
 
             .menu-toggle { display: flex; }
             .nav-links {
@@ -512,7 +515,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             <span class="tagline">Welcome to my profile</span>
             <h1><?= htmlspecialchars($slogan) ?></h1>
             <p><?= nl2br(htmlspecialchars($intro)) ?></p>
-            <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: flex-start;">
+            <div class="hero-btns" style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: flex-start;">
                 <button class="btn btn-primary" onclick="document.getElementById('services').scrollIntoView();">View Pricing</button>
                 <button class="btn btn-outline" onclick="document.getElementById('facts').scrollIntoView();">Explore Profile</button>
             </div>
@@ -710,11 +713,11 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
                                 <?php if(empty($expList[$slug])): ?>
                                     <p style="color:var(--text-muted); text-align:center;">No entries available.</p>
                                 <?php else: foreach($expList[$slug] as $e): ?>
-                                    <div class="timeline-item" style="border-width: 1px; margin-bottom: 12px; border-style: solid; border-color: var(--border); background: var(--bg);">
-                                        <div class="timeline-date" style="color: var(--primary); font-size: 0.8rem; margin-bottom: 8px;"><?= htmlspecialchars($e['date_range']) ?></div>
-                                        <div class="timeline-content" style="border: none; padding-top: 5px; margin-top: 0;">
-                                            <h4 style="font-size: 1.05rem; margin-bottom: 10px;"><?= htmlspecialchars($e['title']) ?></h4>
-                                            <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-body);"><?= nl2br(htmlspecialchars($e['description'])) ?></p>
+                                    <div class="timeline-item" style="display: flex; flex-direction: column; border-width: 1px; margin-bottom: 12px; border-style: solid; border-color: var(--border); background: var(--bg); padding: 24px;">
+                                        <div class="timeline-date" style="flex: none; color: var(--primary); font-size: 0.85rem; margin-bottom: 10px; padding: 0;"><?= htmlspecialchars($e['date_range']) ?></div>
+                                        <div class="timeline-content" style="border: none; padding-top: 10px; padding-left: 0; border-top: 1px solid var(--border); margin-top: 0;">
+                                            <h4 style="font-size: 1.15rem; margin-bottom: 12px; color: var(--text-main);"><?= htmlspecialchars($e['title']) ?></h4>
+                                            <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-body);"><?= nl2br(htmlspecialchars($e['description'])) ?></p>
                                             <?php if(!empty($e['link'])): ?>
                                                 <a href="<?= htmlspecialchars($e['link']) ?>" target="_blank" style="display:block; text-align:center; margin-top:15px; padding: 10px; background: var(--primary-light); color: var(--primary); border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.85rem;">View Work Content &rarr;</a>
                                             <?php endif; ?>
