@@ -262,8 +262,8 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
         .tab-content { display: none; opacity: 0; transform: translateY(10px); transition: all 0.4s ease; }
         .tab-content.active { display: block; opacity: 1; transform: translateY(0); }
 
-        /* Mobile Accordion */
-        .skills-accordion { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        /* Unified Accordion Container (Used for Skills & Journey) */
+        .mobile-accordion { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
         .accordion-item { border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); overflow: hidden; transition: var(--transition); }
         .accordion-item:hover { border-color: var(--primary); }
         .accordion-header { padding: 20px 24px; font-weight: 700; color: var(--text-main); cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: var(--transition); background: var(--surface); }
@@ -341,7 +341,8 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             .timeline-content { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 16px; }
             
             /* Unified Card Padding for Tablet */
-            .clean-card, .price-card, .testi-card, .org-content, .news-content { padding: 24px !important; }
+            .clean-card, .testi-card, .org-content, .news-content { padding: 24px !important; }
+            .price-card { padding: 32px !important; }
             .grid-3 { gap: 20px; grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 768px) {
@@ -354,6 +355,18 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             .desktop-only { display: none; }
             .mobile-only { display: block; }
             .grid-3 { grid-template-columns: 1fr; gap: 16px; }
+            
+            /* Compact Experience for Mobile */
+            .timeline-item { padding: 20px !important; border-radius: 16px !important; }
+            .timeline-content { padding-top: 12px !important; margin-top: 12px !important; }
+            .timeline-date { font-size: 0.85rem !important; }
+            .timeline-content h4 { font-size: 1.15rem !important; }
+            
+            /* Fix Price Card estética on Mobile */
+            .price-card { padding: 32px 24px !important; text-align: left; }
+            .price-title { font-size: 1.25rem; font-weight: 800; }
+            .price-amount { font-size: 1.8rem; margin-bottom: 20px; }
+            .price-desc { font-size: 0.95rem; }
 
             .menu-toggle { display: flex; }
             .nav-links {
@@ -644,32 +657,75 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             <p class="text-muted">Track record across roles, speaking engagements, and publications.</p>
         </div>
         <div class="fade-in-up" style="transition-delay: 0.2s;">
-            <div class="tabs-header">
-                <button class="tab-btn active" onclick="switchTab(this, 'exp', 'work')">Work Experience</button>
-                <button class="tab-btn" onclick="switchTab(this, 'exp', 'speaking')">Speaking / Seminars</button>
-                <button class="tab-btn" onclick="switchTab(this, 'exp', 'writing')">Written Works</button>
-            </div>
-            <div class="exp-contents">
-                <?php foreach(['work', 'speaking', 'writing'] as $idx => $cat): ?>
-                    <div id="exp-<?= $cat ?>" class="tab-content <?= $idx === 0 ? 'active' : '' ?>">
-                        <div class="timeline">
-                            <?php if(empty($expList[$cat])): ?>
-                                <p style="color:var(--text-muted);">No entries available.</p>
-                            <?php else: foreach($expList[$cat] as $e): ?>
-                                <div class="timeline-item">
-                                    <div class="timeline-date"><?= htmlspecialchars($e['date_range']) ?></div>
-                                    <div class="timeline-content">
-                                        <h4><?= htmlspecialchars($e['title']) ?></h4>
-                                        <p><?= nl2br(htmlspecialchars($e['description'])) ?></p>
-                                        <?php if(!empty($e['link'])): ?>
-                                            <a href="<?= htmlspecialchars($e['link']) ?>" target="_blank" style="color:var(--primary); font-weight:700; text-decoration:none; font-size:0.9rem; display:inline-block; margin-top:10px;">Listen / Read Work &rarr;</a>
-                                        <?php endif; ?>
+            <?php 
+            $expCats = [
+                'work' => 'Work Experience',
+                'speaking' => 'Speaking / Seminars',
+                'writing' => 'Written Works'
+            ];
+            ?>
+            
+            <!-- Desktop Tabs View -->
+            <div class="desktop-only">
+                <div class="tabs-header">
+                    <?php $first = true; foreach($expCats as $slug => $label): ?>
+                        <button class="tab-btn <?= $first ? 'active' : '' ?>" onclick="switchTab(this, 'exp', '<?= $slug ?>')"><?= $label ?></button>
+                    <?php $first = false; endforeach; ?>
+                </div>
+                <div class="exp-contents">
+                    <?php $first = true; foreach($expCats as $slug => $label): ?>
+                        <div id="exp-<?= $slug ?>" class="tab-content <?= $first ? 'active' : '' ?>">
+                            <div class="timeline">
+                                <?php if(empty($expList[$slug])): ?>
+                                    <p style="color:var(--text-muted);">No entries available.</p>
+                                <?php else: foreach($expList[$slug] as $e): ?>
+                                    <div class="timeline-item">
+                                        <div class="timeline-date"><?= htmlspecialchars($e['date_range']) ?></div>
+                                        <div class="timeline-content">
+                                            <h4><?= htmlspecialchars($e['title']) ?></h4>
+                                            <p><?= nl2br(htmlspecialchars($e['description'])) ?></p>
+                                            <?php if(!empty($e['link'])): ?>
+                                                <a href="<?= htmlspecialchars($e['link']) ?>" target="_blank" style="color:var(--primary); font-weight:700; text-decoration:none; font-size:0.9rem; display:inline-block; margin-top:10px;">Listen / Read Work &rarr;</a>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
-                                </div>
-                            <?php endforeach; endif; ?>
+                                <?php endforeach; endif; ?>
+                            </div>
+                        </div>
+                    <?php $first = false; endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Mobile Accordion View -->
+            <div class="mobile-only">
+                <div class="mobile-accordion">
+                    <?php foreach($expCats as $slug => $label): ?>
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span><?= $label ?></span>
+                            <span class="icon">▼</span>
+                        </div>
+                        <div class="accordion-content" style="padding: 15px;">
+                            <div class="timeline">
+                                <?php if(empty($expList[$slug])): ?>
+                                    <p style="color:var(--text-muted); text-align:center;">No entries available.</p>
+                                <?php else: foreach($expList[$slug] as $e): ?>
+                                    <div class="timeline-item" style="border-width: 1px; margin-bottom: 12px; border-style: solid; border-color: var(--border); background: var(--bg);">
+                                        <div class="timeline-date" style="color: var(--primary); font-size: 0.8rem; margin-bottom: 8px;"><?= htmlspecialchars($e['date_range']) ?></div>
+                                        <div class="timeline-content" style="border: none; padding-top: 5px; margin-top: 0;">
+                                            <h4 style="font-size: 1.05rem; margin-bottom: 10px;"><?= htmlspecialchars($e['title']) ?></h4>
+                                            <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-body);"><?= nl2br(htmlspecialchars($e['description'])) ?></p>
+                                            <?php if(!empty($e['link'])): ?>
+                                                <a href="<?= htmlspecialchars($e['link']) ?>" target="_blank" style="display:block; text-align:center; margin-top:15px; padding: 10px; background: var(--primary-light); color: var(--primary); border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.85rem;">View Work Content &rarr;</a>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                <?php endforeach; endif; ?>
+                            </div>
                         </div>
                     </div>
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
     </div>
@@ -734,7 +790,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
 
             <!-- Mobile Accordion View -->
             <div class="mobile-only">
-                <div class="skills-accordion">
+                <div class="mobile-accordion">
                     <?php foreach($skillCats as $slug => $label): ?>
                     <div class="accordion-item">
                         <div class="accordion-header" onclick="toggleAccordion(this)">
