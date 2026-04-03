@@ -79,7 +79,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://osmannurchaidir.ct.ws/"> 
+    <meta property="og:url" content="https://osmannurchaidir.my.id/"> 
     <meta property="og:site_name" content="Portfolio Osman Nur Chaidir">
     <meta property="og:title" content="<?= htmlspecialchars($seo_title) ?>">
     <meta property="og:description" content="<?= htmlspecialchars($seo_description) ?>">
@@ -89,7 +89,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://osmannurchaidir.ct.ws/">
+    <meta property="twitter:url" content="https://osmannurchaidir.my.id/">
     <meta property="twitter:title" content="<?= htmlspecialchars($seo_title) ?>">
     <meta property="twitter:description" content="<?= htmlspecialchars($seo_description) ?>">
     <meta property="twitter:image" content="<?= htmlspecialchars($og_image_setting) ?>">
