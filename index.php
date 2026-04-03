@@ -25,6 +25,17 @@ $socials = [
     'youtube' => getSetting($conn, 'social_youtube')
 ];
 
+// Fetch SEO Settings
+$seo_title = getSetting($conn, 'seo_title') ?: 'Osman Nur Chaidir | Mentor Bisnis & Mentor Pengusaha Muda Malang Terbaik';
+$seo_description = getSetting($conn, 'seo_description') ?: 'Cari Mentor Bisnis Malang? Osman Nur Chaidir adalah rekomendasi mentor pengusaha muda Malang berpengalaman 10+ tahun membantu UMKM & Bisnis Lokal untuk naik kelas.';
+$seo_keywords = getSetting($conn, 'seo_keywords') ?: 'Mentor Pengusaha, Mentor Pengusaha Muda Malang, Rekomendasi Mentor Bisnis Malang, Mentor Bisnis Malang, Pengusaha Muda Malang';
+
+$og_image_setting = getSetting($conn, 'og_image');
+if (empty($og_image_setting)) {
+    // Fallback to professional banner if exists, else hero image
+    $og_image_setting = file_exists('assets/images/og_share.png') ? 'assets/images/og_share.png' : $hero_image;
+}
+
 // Fetch Data
 $orgs = $conn->query("SELECT * FROM organizations ORDER BY order_num ASC");
 
@@ -60,22 +71,28 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Osman Nur Chaidir | Mentor Pengusaha Muda Berpengalaman 10 Tahun</title>
-    <meta name="description" content="Berwirausaha sejak kelas 3 SMP, Osman Nur Chaidir kini telah membimbing lebih dari 150 pengusaha. Dapatkan insight bisnis berbasis pengalaman 10 tahun lebih.">
+    <title><?= htmlspecialchars($seo_title) ?></title>
+    <meta name="description" content="<?= htmlspecialchars($seo_description) ?>">
+    <meta name="keywords" content="<?= htmlspecialchars($seo_keywords) ?>">
+    <meta name="author" content="Osman Nur Chaidir">
     <meta name="google-site-verification" content="K8Fgg2T58pvdooBOsl7ipQp5LJW_hUcN8CA6T1J2C8s" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://osmannurchaidir.ct.ws/"> 
-    <meta property="og:title" content="Osman Nur Chaidir | Mentor Pengusaha Muda Berpengalaman 10 Tahun">
-    <meta property="og:description" content="Berwirausaha sejak kelas 3 SMP, Osman Nur Chaidir kini telah membimbing lebih dari 150 pengusaha. Dapatkan insight bisnis berbasis pengalaman 10 tahun lebih.">
-    <meta property="og:image" content="<?= htmlspecialchars($hero_image) ?>">
+    <meta property="og:site_name" content="Portfolio Osman Nur Chaidir">
+    <meta property="og:title" content="<?= htmlspecialchars($seo_title) ?>">
+    <meta property="og:description" content="<?= htmlspecialchars($seo_description) ?>">
+    <meta property="og:image" content="<?= htmlspecialchars($og_image_setting) ?>">
+    <meta property="og:image:alt" content="Osman Nur Chaidir - Mentor Pengusaha Muda Malang">
+    <meta property="og:locale" content="id_ID">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Osman Nur Chaidir | Mentor Pengusaha Muda Berpengalaman 10 Tahun">
-    <meta property="twitter:description" content="Berwirausaha sejak kelas 3 SMP, Osman Nur Chaidir kini telah membimbing lebih dari 150 pengusaha. Dapatkan insight bisnis berbasis pengalaman 10 tahun lebih.">
-    <meta property="twitter:image" content="<?= htmlspecialchars($hero_image) ?>">
+    <meta property="twitter:url" content="https://osmannurchaidir.ct.ws/">
+    <meta property="twitter:title" content="<?= htmlspecialchars($seo_title) ?>">
+    <meta property="twitter:description" content="<?= htmlspecialchars($seo_description) ?>">
+    <meta property="twitter:image" content="<?= htmlspecialchars($og_image_setting) ?>">
     
     <!-- Plus Jakarta Sans Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -512,7 +529,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
 <section class="hero">
     <div class="container hero-container">
         <div class="hero-content fade-in-up">
-            <span class="tagline">Welcome to my profile</span>
+            <span class="tagline">Official Portfolio | Mentor Bisnis Malang</span>
             <h1><?= htmlspecialchars($slogan) ?></h1>
             <p><?= nl2br(htmlspecialchars($intro)) ?></p>
             <div class="hero-btns" style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: flex-start;">
@@ -521,7 +538,7 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
             </div>
         </div>
         <div class="hero-image fade-in-up" style="transition-delay: 0.2s;">
-            <img src="<?= htmlspecialchars($hero_image) ?>" alt="Osman Nur Chaidir">
+            <img src="<?= htmlspecialchars($hero_image) ?>" alt="Osman Nur Chaidir - Mentor Pengusaha Muda Malang">
         </div>
     </div>
 </section>
@@ -531,8 +548,8 @@ $testimonials = $conn->query("SELECT * FROM testimonials ORDER BY order_num ASC"
 <section id="facts" class="bg-white">
     <div class="container">
         <div class="section-header fade-in-up">
-            <h2>Data & Facts</h2>
-            <p class="text-muted">A quick glimpse into my professional milestones and impact.</p>
+            <h2>Data & Fakta Pengusaha</h2>
+            <p class="text-muted">Osman Nur Chaidir adalah <strong>Rekomendasi Mentor Bisnis Malang</strong> dengan rekam jejak sebagai <strong>Pengusaha Muda Malang</strong> yang telah menginspirasi banyak pihak melalui real-life experience.</p>
         </div>
         <div class="stats-grid fade-in-up" style="transition-delay: 0.2s;">
             <?php if($fact_wirausaha): ?>

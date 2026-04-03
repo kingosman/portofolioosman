@@ -132,6 +132,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $page === 'settings') {
                 <input type="text" name="settings[social_youtube]" value="<?= htmlspecialchars(getSetting($conn, 'social_youtube')) ?>" placeholder="https://youtube.com/...">
             </div>
 
+            <hr style="margin:30px 0; border:1px solid #eee;">
+            <h3>SEO & Social Media Meta</h3>
+            <p style="font-size:0.85rem; color:#666; margin-bottom:15px;">Optimize how your website appears on Google and Social Media (WhatsApp, FB, etc).</p>
+            <div class="form-group">
+                <label>SEO Title (Browser Tab & Social Share Title)</label>
+                <input type="text" name="settings[seo_title]" value="<?= htmlspecialchars(getSetting($conn, 'seo_title')) ?>" placeholder="Default: Osman Nur Chaidir | Mentor Bisnis & Mentor Pengusaha Muda Malang Terbaik">
+            </div>
+            <div class="form-group">
+                <label>SEO Description (Meta Tag & Snippet Summary)</label>
+                <textarea name="settings[seo_description]" rows="3" placeholder="Default: Cari Mentor Bisnis Malang? Osman Nur Chaidir adalah rekomendasi mentor pengusaha muda Malang..."><?= htmlspecialchars(getSetting($conn, 'seo_description')) ?></textarea>
+            </div>
+            <div class="form-group">
+                <label>SEO Keywords (Comma separated)</label>
+                <input type="text" name="settings[seo_keywords]" value="<?= htmlspecialchars(getSetting($conn, 'seo_keywords')) ?>" placeholder="Mentor Pengusaha, Mentor Pengusaha Muda Malang, Rekomendasi Mentor Bisnis Malang, Mentor Bisnis Malang, Pengusaha Muda Malang">
+            </div>
+            <div class="form-group">
+                <label>Social Share Image / OG Image (External URL)</label>
+                <input type="text" name="settings[og_image]" value="<?= htmlspecialchars(getSetting($conn, 'og_image')) ?>" placeholder="Leave empty to use Hero Image. Recommended size: 1200x630">
+            </div>
+    
+
             <button type="submit" class="btn">Save Settings</button>
         </form>
     </div>
